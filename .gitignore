@@ -1,0 +1,56 @@
+# ============================================================
+# Unreal Engine 5 .gitignore
+# ============================================================
+
+# Build / generated folders
+Binaries/
+Build/
+DerivedDataCache/
+Intermediate/
+Saved/
+
+# Generated project files
+*.sln
+*.suo
+*.xcodeproj
+*.xcworkspace
+.vs/
+.vscode/
+.idea/
+
+# Compiled binary addons (from Plugins)
+Plugins/**/Binaries/
+Plugins/**/Intermediate/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Crash reports
+*.dmp
+*.log
+
+# Packaged builds
+/Packaged/
+/Releases/
+
+# Visual Studio user-specific
+*.VC.db
+*.VC.VC.opendb
+*.user
+*.userprefs
+*.sdf
+*.opensdf
+
+# Rider
+.idea/
+*.ReSharper*
+
+# Local config overrides (keep project configs tracked)
+/Config/DefaultEditorPerProjectUserSettings.ini
+
+# ============================================================
+# Git LFS — tracked via .gitattributes, not here
+# Large binaries (textures, meshes, audio, video) go through LFS
+# ============================================================
