@@ -14,4 +14,9 @@ class ORBITALINVADERS_API AOrbitalPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
+protected:
+	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	TObjectPtr<class UInputMappingContext> DefaultMappingContext;
 };

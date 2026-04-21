@@ -5,6 +5,7 @@
 #include "OrbitalGameState.h"
 #include "OrbitalPlayerController.h"
 #include "OrbitalPlayerState.h"
+#include "PlayerShip.h"
 
 AOrbitalGameMode::AOrbitalGameMode()
 {
@@ -12,7 +13,7 @@ AOrbitalGameMode::AOrbitalGameMode()
 	PlayerControllerClass = AOrbitalPlayerController::StaticClass();
 	PlayerStateClass      = AOrbitalPlayerState::StaticClass();
 
-	DefaultPawnClass = nullptr;
+	DefaultPawnClass = APlayerShip::StaticClass();
 }
 
 void AOrbitalGameMode::BeginPlay()
