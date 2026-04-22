@@ -86,10 +86,29 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
     TObjectPtr<class UInputAction> FireAction;
+    
+    /** Duration of invincibility after being hit (seconds). */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+    float InvincibilityDuration = 1.5f;
+    
+    // Visual Roll
+
+    /** Maximum roll angle when moving at full speed (degrees). */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visuals")
+    float MaxRollAngle = 25.f;
+
+    /** How fast the roll interpolates to target (higher = snappier). */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visuals")
+    float RollInterpSpeed = 8.f;
 
 private:
     //  Runtime state 
-
+    bool bIsInvincible = false;
+    FTimerHandle InvincibilityTimerHandle;
+    FTimerHandle BlinkTimerHandle;
+    float CurrentRoll = 0.f;    
+    void EndInvincibility();
+    void ToggleMeshVisibility();
     /** Current angle on the orbit (radians). */
     float CurrentAngle = 0.f;
     FVector2D InputVector = FVector2D::ZeroVector;

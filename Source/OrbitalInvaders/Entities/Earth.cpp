@@ -5,6 +5,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Projectile.h"
 #include "OrbitalInvaders/Core/OrbitalGameMode.h"
+#include "OrbitalInvaders/Core/OrbitalPlayerController.h"
 
 AEarth::AEarth()
 {
@@ -36,6 +37,18 @@ int32 AEarth::ApplyDamage(int32 Amount)
 	CurrentHealth = FMath::Max(0, CurrentHealth - Amount);
 	UE_LOG(LogTemp, Warning, TEXT("Earth HP: %d/%d"), CurrentHealth, MaxHealth);
 	
+	
+	// Screen shake
+	if (UWorld* World = GetWorld())
+	{
+		if (APlayerController* PC = World->GetFirstPlayerController())
+		{
+			if (AOrbitalPlayerController* OPC = Cast<AOrbitalPlayerController>(PC))
+			{
+				OPC->PlayCameraShake(0.1f);
+			}
+		}
+	}
 	if (CurrentHealth <= 0)
 	{
 		if (AOrbitalGameMode* GM = GetWorld()->GetAuthGameMode<AOrbitalGameMode>())

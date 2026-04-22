@@ -29,11 +29,12 @@ public:
 
 protected:
     virtual void BeginPlay() override;
-
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "VFX")
+    TObjectPtr<class UNiagaraSystem> DestructionEffect;
     //  Components 
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-    TObjectPtr<class USphereComponent> CollisionComponent;
+    TObjectPtr<class UBoxComponent> CollisionComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
     TObjectPtr<class UStaticMeshComponent> BunkerMesh;

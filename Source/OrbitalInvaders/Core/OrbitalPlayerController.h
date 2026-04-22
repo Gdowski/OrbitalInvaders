@@ -19,4 +19,14 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<class UInputMappingContext> DefaultMappingContext;
+	
+public:
+	/** Trigger camera shake with given intensity (0.0 - 1.0). */
+	UFUNCTION(BlueprintCallable, Category = "Effects")
+	void PlayCameraShake(float Intensity = 1.f);
+
+protected:
+	/** Camera shake class used for gameplay impacts. Assigned in BP. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effects")
+	TSubclassOf<class UCameraShakeBase> HitShakeClass;
 };

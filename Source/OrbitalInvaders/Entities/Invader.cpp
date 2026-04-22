@@ -9,6 +9,7 @@
 
 #include "Components/SphereComponent.h"
 #include "OrbitalInvaders/Core/OrbitalGameState.h"
+#include "OrbitalInvaders/Systems/VFXHelper.h"
 
 // Sets default values
 AInvader::AInvader()
@@ -46,7 +47,7 @@ void AInvader::BeginPlay()
 	
 }
 
-void AInvader::SetOrbitalPosition(float Angle, float OrbitRadius)
+void AInvader::SetOrbitalPosition(float Angle, float OrbitRadius, float RotationDirection)
 {
 	const float X = FMath::Cos(Angle) * OrbitRadius;
 	const float Y = FMath::Sin(Angle) * OrbitRadius;
@@ -54,7 +55,9 @@ void AInvader::SetOrbitalPosition(float Angle, float OrbitRadius)
 
 	// Face Earth (center of the world)
 	const FVector Direction = (-GetActorLocation()).GetSafeNormal();
-	SetActorRotation(Direction.Rotation());
+	FRotator NewRotation = Direction.Rotation();
+	NewRotation.Roll = -RotationDirection * MaxRollAngle;
+	SetActorRotation(NewRotation);
 }
 
 bool AInvader::ApplyDamage(int32 Amount)
@@ -70,6 +73,10 @@ bool AInvader::ApplyDamage(int32 Amount)
 
 void AInvader::OnDeath()
 {
+	if (DeathExplosionEffect)
+	{
+		UVFXHelper::SpawnExplosion(this, DeathExplosionEffect, GetActorLocation());
+	}
 	Destroy();
 }
 

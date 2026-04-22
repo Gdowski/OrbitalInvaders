@@ -16,6 +16,7 @@
 
 #include "Projectile.h"
 #include "OrbitalInvaders/Core/OrbitalGameMode.h"
+#include "OrbitalInvaders/Core/OrbitalPlayerController.h"
 // Sets default values
 APlayerShip::APlayerShip()
 {
@@ -37,9 +38,6 @@ APlayerShip::APlayerShip()
 	SpringArm->TargetArmLength = 3000.f;                     
 	SpringArm->SetRelativeRotation(FRotator(-90.f, 0.f, 0.f)); 
 	SpringArm->bDoCollisionTest = false;                     
-	SpringArm->bInheritPitch = false;                        
-	SpringArm->bInheritYaw = false;
-	SpringArm->bInheritRoll = false;
 	SpringArm->bUsePawnControlRotation = false;
 
 	
@@ -77,6 +75,9 @@ void APlayerShip::Tick(float DeltaTime)
 	
 	CurrentAngle += Direction * AngularSpeed * DeltaTime;
 	CurrentAngle = FMath::Fmod(CurrentAngle, 2.f * PI);
+	
+	const float TargetRoll = Direction * MaxRollAngle;
+	CurrentRoll = FMath::FInterpTo(CurrentRoll, TargetRoll, DeltaTime, RollInterpSpeed);
 
 	UpdateOrbitalPosition();
 }
@@ -111,8 +112,8 @@ void APlayerShip::UpdateOrbitalPosition()
 
 	// 2. Calculate rotation -> always away from center
 	const FVector DirectionToCenter = (NewLocation).GetSafeNormal();
-	const FRotator NewRotation = DirectionToCenter.Rotation();
-
+	FRotator NewRotation = DirectionToCenter.Rotation();
+	NewRotation.Roll = CurrentRoll;
 	SetActorRotation(NewRotation);
 }
 
@@ -160,6 +161,13 @@ int32 APlayerShip::ApplyDamage(int32 Amount)
 {
 	CurrentHealth = FMath::Max(0, CurrentHealth - Amount);
 	UE_LOG(LogTemp, Warning, TEXT("Player HP: %d/%d"), CurrentHealth, MaxHealth);
+	
+	// Screen shake on hit
+	if (AOrbitalPlayerController* PC = Cast<AOrbitalPlayerController>(GetController()))
+	{
+		PC->PlayCameraShake(1.f);  // full intensity for player hit
+	}
+	
 	if (CurrentHealth <= 0)
 	{
 		if (AOrbitalGameMode* GM = GetWorld()->GetAuthGameMode<AOrbitalGameMode>())
@@ -167,6 +175,28 @@ int32 APlayerShip::ApplyDamage(int32 Amount)
 			GM->TriggerGameOver(TEXT("Player destroyed"));
 		}
 		
+	}
+	else
+	{
+		bIsInvincible = true;
+
+		// End invincibility after duration
+		GetWorld()->GetTimerManager().SetTimer(
+			InvincibilityTimerHandle,
+			this,
+			&APlayerShip::EndInvincibility,
+			InvincibilityDuration,
+			false
+		);
+
+		// Blink mesh during invincibility
+		GetWorld()->GetTimerManager().SetTimer(
+			BlinkTimerHandle,
+			this,
+			&APlayerShip::ToggleMeshVisibility,
+			0.1f,
+			true  // looping
+		);
 	}
 	return CurrentHealth;
 }
@@ -194,5 +224,25 @@ void APlayerShip::HandleOverlap(
 	{
 		ApplyDamage(1);
 		return;
+	}
+}
+
+void APlayerShip::EndInvincibility()
+{
+	bIsInvincible = false;
+
+	// Stop blinking, ensure mesh is visible
+	GetWorld()->GetTimerManager().ClearTimer(BlinkTimerHandle);
+	if (ShipMesh)
+	{
+		ShipMesh->SetVisibility(true);
+	}
+}
+
+void APlayerShip::ToggleMeshVisibility()
+{
+	if (ShipMesh)
+	{
+		ShipMesh->ToggleVisibility();
 	}
 }

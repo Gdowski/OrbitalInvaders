@@ -18,3 +18,11 @@ void AOrbitalPlayerController::BeginPlay()
 		}
 	}
 }
+
+void AOrbitalPlayerController::PlayCameraShake(float Intensity)
+{
+	if (HitShakeClass)
+	{
+		ClientStartCameraShake(HitShakeClass, Intensity);
+	}
+}

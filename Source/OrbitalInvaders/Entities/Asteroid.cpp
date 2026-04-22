@@ -11,6 +11,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 #include "OrbitalInvaders/Systems/AsteroidSpawner.h"
+#include "OrbitalInvaders/Systems/VFXHelper.h"
 
 AAsteroid::AAsteroid()
 {
@@ -140,7 +141,13 @@ void AAsteroid::SplitOrDestroy()
 		if (ChildA) Spawner->RegisterAsteroid(ChildA);
 		if (ChildB) Spawner->RegisterAsteroid(ChildB);
 	}
-
+	if (ExplosionEffect)
+	{
+		const float VFXScale = (Size == EAsteroidSize::Large) ? 2.f
+							 : (Size == EAsteroidSize::Medium) ? 1.5f
+							 : 1.f;
+		UVFXHelper::SpawnExplosion(this, ExplosionEffect, GetActorLocation(), VFXScale);
+	}
 	Destroy();
 }
 

@@ -1,16 +1,15 @@
 #include "Bunker.h"
 
 #include "Asteroid.h"
-#include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Projectile.h"
-
+#include "OrbitalInvaders/Systems/VFXHelper.h"
+#include "Components/BoxComponent.h"
 ABunker::ABunker()
 {
     PrimaryActorTick.bCanEverTick = false;
 
-    CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionComponent"));
-    CollisionComponent->InitSphereRadius(60.f);
+    CollisionComponent = CollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionComponent"));
     CollisionComponent->SetCollisionProfileName(TEXT("Bunker"));
     RootComponent = CollisionComponent;
 
@@ -50,6 +49,10 @@ int32 ABunker::ApplyDamage(int32 Amount)
 
 void ABunker::OnDeath()
 {
+    if (DestructionEffect)
+    {
+        UVFXHelper::SpawnExplosion(this, DestructionEffect, GetActorLocation(), 1.5f);
+    }
     Destroy();
 }
 

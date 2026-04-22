@@ -126,7 +126,7 @@ void AInvaderFormationManager::UpdateInvaderPositions()
 
         const float Angle = FormationAngle + Invader->AngleOffset;
         const float Radius = GetOrbitRadius(Invader->OrbitIndex);
-        Invader->SetOrbitalPosition(Angle, Radius);
+        Invader->SetOrbitalPosition(Angle, Radius,RotationDirection);
     }
 }
 

@@ -54,7 +54,8 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Asteroid")
 	EAsteroidSize Size = EAsteroidSize::Large;
-	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "VFX")
+	TObjectPtr<class UNiagaraSystem> ExplosionEffect;
 private:
 	UFUNCTION()
 	void HandleOverlap(

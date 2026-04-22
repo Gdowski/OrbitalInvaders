@@ -32,8 +32,7 @@ public:
 
 	/** Set position on orbit. Called by formation manager. */
 	UFUNCTION(BlueprintCallable, Category = "Orbit")
-	void SetOrbitalPosition(float Angle, float OrbitRadius);
-
+	void SetOrbitalPosition(float Angle, float OrbitRadius, float RotationDirection = 0.f);
 	/** Apply damage. Returns true if the invader died as a result. */
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	bool ApplyDamage(int32 Amount);
@@ -72,7 +71,13 @@ protected:
 	virtual void OnDeath();
 	
 	virtual EScoreEvent GetScoreEvent() const { return EScoreEvent::InvaderKilled; }
+	/** Niagara effect spawned on death. Assigned in BP. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "VFX")
+	TObjectPtr<class UNiagaraSystem> DeathExplosionEffect;
 	
+	/** Maximum roll angle when formation is rotating (degrees). */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visuals")
+	float MaxRollAngle = 10.f;
 private:
 	/** Callback bound to overlap events. */
 	UFUNCTION()
