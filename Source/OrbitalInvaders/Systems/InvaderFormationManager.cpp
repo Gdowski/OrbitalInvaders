@@ -5,9 +5,7 @@
 #include "OrbitalInvaders/Entities/Invader.h"
 
 
-float TimeSinceLastReversal = 0.f;
-/** Current direction multiplier: +1 or -1. */
-float RotationDirection = 1.f;
+
 
 
 AInvaderFormationManager::AInvaderFormationManager()

@@ -1,5 +1,6 @@
 #include "Earth.h"
 
+#include "Asteroid.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Projectile.h"
@@ -30,7 +31,7 @@ void AEarth::BeginPlay()
 	}
 }
 
-int32 AEarth::TakeDamage(int32 Amount)
+int32 AEarth::ApplyDamage(int32 Amount)
 {
 	CurrentHealth = FMath::Max(0, CurrentHealth - Amount);
 	UE_LOG(LogTemp, Warning, TEXT("Earth HP: %d/%d"), CurrentHealth, MaxHealth);
@@ -57,7 +58,18 @@ void AEarth::HandleOverlap(
 
 	if (AProjectile* Projectile = Cast<AProjectile>(OtherActor))
 	{
-		TakeDamage(1);
+		ApplyDamage(1);
 		Projectile->Destroy();
+		return;
+	}
+
+	// Asteroid hit — instant game over per game spec
+	if (Cast<AAsteroid>(OtherActor))
+	{
+		if (AOrbitalGameMode* GM = GetWorld()->GetAuthGameMode<AOrbitalGameMode>())
+		{
+			GM->TriggerGameOver(TEXT("Asteroid impacted Earth"));
+		}
+		return;
 	}
 }

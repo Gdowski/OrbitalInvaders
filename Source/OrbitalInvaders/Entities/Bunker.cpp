@@ -1,4 +1,6 @@
 #include "Bunker.h"
+
+#include "Asteroid.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Projectile.h"
@@ -30,7 +32,7 @@ void ABunker::BeginPlay()
     UpdateDamageVisual();
 }
 
-int32 ABunker::TakeDamage(int32 Amount)
+int32 ABunker::ApplyDamage(int32 Amount)
 {
     CurrentHealth = FMath::Max(0, CurrentHealth - Amount);
 
@@ -83,10 +85,18 @@ void ABunker::HandleOverlap(
 {
     if (!OtherActor || OtherActor == this) return;
 
+    // Hit by projectile
     if (AProjectile* Projectile = Cast<AProjectile>(OtherActor))
     {
-        TakeDamage(1);
+        ApplyDamage(1);
         Projectile->Destroy();
+        return;
     }
-    // TODO: asteroid collision 
+
+    // Hit by asteroid — bunker takes damage, asteroid splits itself
+    if (Cast<AAsteroid>(OtherActor))
+    {
+        ApplyDamage(1);
+        return;
+    }
 }

@@ -19,7 +19,7 @@ public:
     ABunker();
 
     UFUNCTION(BlueprintCallable, Category = "Combat")
-    int32 TakeDamage(int32 Amount);
+    int32 ApplyDamage(int32 Amount);
 
     UFUNCTION(BlueprintPure, Category = "Combat")
     int32 GetCurrentHealth() const { return CurrentHealth; }

@@ -70,6 +70,10 @@ private:
 
     /** Time accumulated since last jump. */
     float TimeSinceLastJump = 0.f;
+    
+    float TimeSinceLastReversal = 0.f;
+    /** Current direction multiplier: +1 or -1. */
+    float RotationDirection = 1.f;
 
     /** Live invaders currently in the formation. */
     UPROPERTY()

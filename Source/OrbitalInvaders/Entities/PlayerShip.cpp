@@ -2,6 +2,8 @@
 
 
 #include "PlayerShip.h"
+
+#include "Asteroid.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -154,7 +156,7 @@ void APlayerShip::Fire()
 	}
 }
 
-int32 APlayerShip::TakeDamage(int32 Amount)
+int32 APlayerShip::ApplyDamage(int32 Amount)
 {
 	CurrentHealth = FMath::Max(0, CurrentHealth - Amount);
 	UE_LOG(LogTemp, Warning, TEXT("Player HP: %d/%d"), CurrentHealth, MaxHealth);
@@ -179,12 +181,18 @@ void APlayerShip::HandleOverlap(
 {
 	if (!OtherActor || OtherActor == this) return;
 
+	// Hit by projectile
 	if (AProjectile* Projectile = Cast<AProjectile>(OtherActor))
 	{
-		TakeDamage(1);
+		ApplyDamage(1);
 		Projectile->Destroy();
+		return;
 	}
-	// TODO: invader collision 
-	// TODO: asteroid collision 
-}
 
+	// Hit by asteroid
+	if (Cast<AAsteroid>(OtherActor))
+	{
+		ApplyDamage(1);
+		return;
+	}
+}

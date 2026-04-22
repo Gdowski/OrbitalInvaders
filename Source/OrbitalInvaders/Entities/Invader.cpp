@@ -3,6 +3,7 @@
 
 #include "Invader.h"
 
+#include "Asteroid.h"
 #include "Projectile.h"
 #include "Bunker.h"
 
@@ -55,7 +56,7 @@ void AInvader::SetOrbitalPosition(float Angle, float OrbitRadius)
 	SetActorRotation(Direction.Rotation());
 }
 
-bool AInvader::TakeDamage(int32 Amount)
+bool AInvader::ApplyDamage(int32 Amount)
 {
 	CurrentHealth -= Amount;
 	if (CurrentHealth <= 0)
@@ -79,20 +80,25 @@ void AInvader::HandleOverlap(
 	bool bFromSweep,
 	const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Invader HandleOverlap: OtherActor=%s"),
-	OtherActor ? *OtherActor->GetName() : TEXT("NULL"));
 	if (!OtherActor || OtherActor == this) return;
 	// Check if it's a player projectile
 	if (AProjectile* Projectile = Cast<AProjectile>(OtherActor))
 	{
-		TakeDamage(1);
+		ApplyDamage(1);
 		Projectile->Destroy();
 	}
  	// Collided with bunker - destroy both
 	if (ABunker* Bunker = Cast<ABunker>(OtherActor))
 	{
-		Bunker->TakeDamage(Bunker->GetMaxHealth());
+		Bunker->ApplyDamage(Bunker->GetMaxHealth());
 		OnDeath();
+	}
+	
+	// Hit by asteroid — invader dies
+	if (Cast<AAsteroid>(OtherActor))
+	{
+		OnDeath();
+		return;
 	}
 }
 

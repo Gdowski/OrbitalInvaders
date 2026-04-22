@@ -27,7 +27,7 @@ public:
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
     
     UFUNCTION(BlueprintCallable, Category = "Health")
-    int32 TakeDamage(int32 Amount);
+    int32 ApplyDamage(int32 Amount);
 
     UFUNCTION(BlueprintPure, Category = "Health")
     int32 GetCurrentHealth() const { return CurrentHealth; }

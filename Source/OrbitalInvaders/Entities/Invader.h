@@ -35,7 +35,7 @@ public:
 
 	/** Apply damage. Returns true if the invader died as a result. */
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	bool TakeDamage(int32 Amount);
+	bool ApplyDamage(int32 Amount);
 	
 	/** Fire a projectile toward Earth. Called by formation manager. */
 	UFUNCTION(BlueprintCallable, Category = "Combat")
