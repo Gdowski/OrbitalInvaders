@@ -19,13 +19,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 private:
-	// ===== Components =====
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class USphereComponent> CollisionComponent;
+	// Components
+	
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UStaticMeshComponent> ProjectileMesh;
@@ -34,6 +30,10 @@ private:
 	TObjectPtr<class UProjectileMovementComponent> MovementComponent;
 	
 protected:
+	// Component moved here so a child can override its Collision Profile
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<class USphereComponent> CollisionComponent;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
 	float ProjectileSpeed = 2000.f;
 

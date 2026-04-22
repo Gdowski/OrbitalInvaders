@@ -13,7 +13,7 @@ AProjectile::AProjectile()
 	// Collision sphere 
 	CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionComponent"));
 	CollisionComponent->InitSphereRadius(15.f);
-	CollisionComponent->SetCollisionProfileName(TEXT("BlockAllDynamic"));
+	CollisionComponent->SetCollisionProfileName(TEXT("PlayerProjectile"));
 	CollisionComponent->SetNotifyRigidBodyCollision(true);  // enable OnHit events
 	RootComponent = CollisionComponent;
 
@@ -41,12 +41,6 @@ void AProjectile::BeginPlay()
 	
 }
 
-// Called every frame
-void AProjectile::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
 
 void AProjectile::Init(const FVector& Direction)
 {

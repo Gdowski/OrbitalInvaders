@@ -14,10 +14,6 @@
  *   - MoveAction     (reference to IA_Move)
  *   - FireAction     (reference to IA_Fire)
  *   - ProjectileClass (reference to BP_PlayerProjectile or subclass)
- *
- * The C++ class implements orbital movement logic, input handling,
- * and projectile spawning. Visual content and asset references
- * are configured in the Blueprint subclass.
  */
 UCLASS()
 class ORBITALINVADERS_API APlayerShip : public APawn
@@ -29,11 +25,17 @@ public:
 
     virtual void Tick(float DeltaTime) override;
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+    
+    UFUNCTION(BlueprintCallable, Category = "Health")
+    int32 TakeDamage(int32 Amount);
+
+    UFUNCTION(BlueprintPure, Category = "Health")
+    int32 GetCurrentHealth() const { return CurrentHealth; }
 
 protected:
     virtual void BeginPlay() override;
 
-    // ===== Components =====
+    //  Components 
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
     TObjectPtr<class USphereComponent> CollisionComponent;
@@ -47,7 +49,7 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
     TObjectPtr<class UCameraComponent> Camera;
 
-    // ===== Orbit configuration =====
+    //  Orbit configuration 
 
     /** Orbit radius from the center of the world (UE units, cm). */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Orbit")
@@ -57,11 +59,11 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Orbit")
     float AngularSpeed = 2.0f;
 
-    /** Deadzone below which input is treated as purely radial (ship stays still). */
+    /** Deadzone to avoid jitter. */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Orbit", meta = (ClampMin = "0.0", ClampMax = "1.0"))
     float OrbitalDeadzone = 0.05f;
 
-    // ===== Combat =====
+    //  Combat 
 
     /** Distance from ship origin at which projectiles spawn. */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
@@ -70,8 +72,14 @@ protected:
     /** Projectile class spawned when firing. Assigned in BP subclass. */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
     TSubclassOf<class AProjectile> ProjectileClass;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+    int32 MaxHealth = 3;
 
-    // ===== Input assets (assigned in Blueprint) =====
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+    int32 CurrentHealth = 3;
+
+    //  Input assets (assigned in Blueprint) 
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
     TObjectPtr<class UInputAction> MoveAction;
@@ -80,15 +88,13 @@ protected:
     TObjectPtr<class UInputAction> FireAction;
 
 private:
-    // ===== Runtime state =====
+    //  Runtime state 
 
     /** Current angle on the orbit (radians). */
     float CurrentAngle = 0.f;
-
-    /** Latest input vector from keyboard/gamepad. Normalized world-space direction. */
     FVector2D InputVector = FVector2D::ZeroVector;
 
-    // ===== Internal methods =====
+    //  Internal methods 
 
     /** Recomputes actor location and rotation from CurrentAngle + OrbitRadius. */
     void UpdateOrbitalPosition();
@@ -97,4 +103,13 @@ private:
     void Move(const struct FInputActionValue& Value);
     void StopMove(const struct FInputActionValue& Value);
     void Fire();
+    
+    UFUNCTION()
+    void HandleOverlap(
+        UPrimitiveComponent* OverlappedComponent,
+        AActor* OtherActor,
+        UPrimitiveComponent* OtherComp,
+        int32 OtherBodyIndex,
+        bool bFromSweep,
+        const FHitResult& SweepResult);
 };

@@ -3,15 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/GameStateBase.h"
-#include "OrbitalGameState.generated.h"
+#include "Projectile.h"
+#include "InvaderProjectile.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class ORBITALINVADERS_API AOrbitalGameState : public AGameStateBase
+class ORBITALINVADERS_API AInvaderProjectile : public AProjectile
 {
 	GENERATED_BODY()
-	
+public:
+	AInvaderProjectile();
 };

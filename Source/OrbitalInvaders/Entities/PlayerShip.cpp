@@ -13,6 +13,7 @@
 #include "DrawDebugHelpers.h"
 
 #include "Projectile.h"
+#include "OrbitalInvaders/Core/OrbitalGameMode.h"
 // Sets default values
 APlayerShip::APlayerShip()
 {
@@ -21,7 +22,7 @@ APlayerShip::APlayerShip()
 	
 	CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionComponent"));
 	CollisionComponent->InitSphereRadius(50.f);
-	CollisionComponent->SetCollisionProfileName(TEXT("Pawn"));
+	CollisionComponent->SetCollisionProfileName(TEXT("Player"));
 	RootComponent = CollisionComponent;
 	
 	ShipMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShipMesh"));
@@ -52,6 +53,11 @@ void APlayerShip::BeginPlay()
 	CurrentAngle = PI / 2.f;
 	//initialize the position of the player
 	UpdateOrbitalPosition();
+	
+	if (CollisionComponent)
+	{
+		CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &APlayerShip::HandleOverlap);
+	}
 }
 
 // Called every frame
@@ -59,15 +65,14 @@ void APlayerShip::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	// Tangent vector: perpendicular to radius, pointing CCW
+	// Tangent vector pointing CCW
 	const FVector2D Tangent(-FMath::Sin(CurrentAngle), FMath::Cos(CurrentAngle));
-
-	// Dot product: how much player input aligns with orbit direction
-	const float OrbitalDir = FVector2D::DotProduct(InputVector, Tangent);
 	
+	const float OrbitalDir = FVector2D::DotProduct(InputVector, Tangent);
 	const float Direction = (FMath::Abs(OrbitalDir) > OrbitalDeadzone)
 	? FMath::Sign(OrbitalDir)
 	: 0.f;
+	
 	CurrentAngle += Direction * AngularSpeed * DeltaTime;
 	CurrentAngle = FMath::Fmod(CurrentAngle, 2.f * PI);
 
@@ -103,7 +108,7 @@ void APlayerShip::UpdateOrbitalPosition()
 	SetActorLocation(NewLocation);
 
 	// 2. Calculate rotation -> always away from center
-	const FVector DirectionToCenter = (-NewLocation).GetSafeNormal();
+	const FVector DirectionToCenter = (NewLocation).GetSafeNormal();
 	const FRotator NewRotation = DirectionToCenter.Rotation();
 
 	SetActorRotation(NewRotation);
@@ -138,7 +143,7 @@ void APlayerShip::Fire()
 	SpawnParams.Owner = this;
 	SpawnParams.Instigator = GetInstigator();
 	SpawnParams.SpawnCollisionHandlingOverride =
-		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+		ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	AProjectile* Projectile = World->SpawnActor<AProjectile>(
 		ProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
@@ -147,5 +152,39 @@ void APlayerShip::Fire()
 	{
 		Projectile->Init(FireDirection);
 	}
+}
+
+int32 APlayerShip::TakeDamage(int32 Amount)
+{
+	CurrentHealth = FMath::Max(0, CurrentHealth - Amount);
+	UE_LOG(LogTemp, Warning, TEXT("Player HP: %d/%d"), CurrentHealth, MaxHealth);
+	if (CurrentHealth <= 0)
+	{
+		if (AOrbitalGameMode* GM = GetWorld()->GetAuthGameMode<AOrbitalGameMode>())
+		{
+			GM->TriggerGameOver(TEXT("Player destroyed"));
+		}
+		
+	}
+	return CurrentHealth;
+}
+
+void APlayerShip::HandleOverlap(
+	UPrimitiveComponent* OverlappedComponent,
+	AActor* OtherActor,
+	UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex,
+	bool bFromSweep,
+	const FHitResult& SweepResult)
+{
+	if (!OtherActor || OtherActor == this) return;
+
+	if (AProjectile* Projectile = Cast<AProjectile>(OtherActor))
+	{
+		TakeDamage(1);
+		Projectile->Destroy();
+	}
+	// TODO: invader collision 
+	// TODO: asteroid collision 
 }
 
