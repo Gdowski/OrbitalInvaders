@@ -13,6 +13,18 @@ enum class EGameplayState : uint8
 	Playing     UMETA(DisplayName = "Playing"),
 	GameOver    UMETA(DisplayName = "Game Over"),
 };
+
+/** Events that award score in the game. */
+UENUM(BlueprintType)
+enum class EScoreEvent : uint8
+{
+	InvaderKilled         UMETA(DisplayName = "Invader Killed"),
+	SpecialInvaderKilled  UMETA(DisplayName = "Special Invader Killed"),
+	AsteroidSmallHit      UMETA(DisplayName = "Small Asteroid Hit"),
+	AsteroidMediumHit     UMETA(DisplayName = "Medium Asteroid Hit"),
+	AsteroidLargeHit      UMETA(DisplayName = "Large Asteroid Hit"),
+};
+
 /**
  * 
  */
@@ -22,6 +34,8 @@ class ORBITALINVADERS_API AOrbitalGameState : public AGameStateBase
 	GENERATED_BODY()
 	
 public:
+
+	
 	UFUNCTION(BlueprintPure, Category = "Gameplay")
 	EGameplayState GetGameplayState() const { return GameplayState; }
 
@@ -33,6 +47,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Score")
 	void AddScore(int32 Delta);
+	
+	/** Award score for a named event. GameState owns the point values. */
+	UFUNCTION(BlueprintCallable, Category = "Score")
+	void AddScoreFor(EScoreEvent Event);
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Gameplay")

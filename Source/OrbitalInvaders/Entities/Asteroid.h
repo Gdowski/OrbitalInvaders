@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "OrbitalInvaders/Core/OrbitalGameState.h"
 #include "Asteroid.generated.h"
 
 UENUM(BlueprintType)
@@ -65,4 +66,7 @@ private:
 		const FHitResult& SweepResult);
 	
 	bool bIsBeingDestroyed = false;
+	
+	EScoreEvent GetScoreEventForSize() const;
+
 };

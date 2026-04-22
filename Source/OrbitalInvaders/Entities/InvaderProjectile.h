@@ -15,4 +15,5 @@ class ORBITALINVADERS_API AInvaderProjectile : public AProjectile
 	GENERATED_BODY()
 public:
 	AInvaderProjectile();
+	virtual bool IsPlayerProjectile() const override { return false; }
 };

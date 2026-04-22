@@ -8,6 +8,7 @@
 #include "Bunker.h"
 
 #include "Components/SphereComponent.h"
+#include "OrbitalInvaders/Core/OrbitalGameState.h"
 
 // Sets default values
 AInvader::AInvader()
@@ -84,14 +85,23 @@ void AInvader::HandleOverlap(
 	// Check if it's a player projectile
 	if (AProjectile* Projectile = Cast<AProjectile>(OtherActor))
 	{
+		if (Projectile->IsPlayerProjectile())
+		{
+			if (AOrbitalGameState* GS = GetWorld()->GetGameState<AOrbitalGameState>())
+			{
+				GS->AddScoreFor(GetScoreEvent());
+			}
+		}
 		ApplyDamage(1);
 		Projectile->Destroy();
+		return;
 	}
  	// Collided with bunker - destroy both
 	if (ABunker* Bunker = Cast<ABunker>(OtherActor))
 	{
 		Bunker->ApplyDamage(Bunker->GetMaxHealth());
 		OnDeath();
+		return;
 	}
 	
 	// Hit by asteroid — invader dies

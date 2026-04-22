@@ -161,6 +161,13 @@ void AAsteroid::HandleOverlap(
 	// Hit by projectile - split
 	if (AProjectile* Projectile = Cast<AProjectile>(OtherActor))
 	{
+		if (Projectile->IsPlayerProjectile())
+		{
+			if (AOrbitalGameState* GS = GetWorld()->GetGameState<AOrbitalGameState>())
+			{
+				GS->AddScoreFor(GetScoreEventForSize());
+			}
+		}
 		Projectile->Destroy();
 		SplitOrDestroy();
 		return;
@@ -195,3 +202,13 @@ void AAsteroid::HandleOverlap(
 	}
 }
 
+EScoreEvent AAsteroid::GetScoreEventForSize() const
+{
+	switch (Size)
+	{
+	case EAsteroidSize::Small:  return EScoreEvent::AsteroidSmallHit;
+	case EAsteroidSize::Medium: return EScoreEvent::AsteroidMediumHit;
+	case EAsteroidSize::Large:  return EScoreEvent::AsteroidLargeHit;
+	}
+	return EScoreEvent::AsteroidSmallHit;  // fallback
+}

@@ -14,6 +14,9 @@ class ORBITALINVADERS_API AProjectile : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AProjectile();
+	/** Returns true if this is a player-fired projectile (awards score on kill). */
+	UFUNCTION(BlueprintPure, Category = "Projectile")
+	virtual bool IsPlayerProjectile() const { return true; }
 
 protected:
 	// Called when the game starts or when spawned

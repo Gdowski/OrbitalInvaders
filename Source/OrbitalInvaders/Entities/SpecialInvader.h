@@ -37,6 +37,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spiral")
 	float DestroyRadius = 400.f;
+	
+	virtual EScoreEvent GetScoreEvent() const override { return EScoreEvent::SpecialInvaderKilled; }
 
 private:
 	/** Accumulated time since spawn, drives spiral motion. */
