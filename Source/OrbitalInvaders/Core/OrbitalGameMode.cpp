@@ -34,6 +34,7 @@ void AOrbitalGameMode::TriggerGameOver(const FString& Reason)
 
 	GS->SetGameplayState(EGameplayState::GameOver);
 	UE_LOG(LogTemp, Warning, TEXT("GAME OVER Reason: %s"), *Reason);
+	GS->SaveHighScoreIfNeeded();
 
 	UWorld* World = GetWorld();
 	if (!World) return;

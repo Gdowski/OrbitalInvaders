@@ -44,3 +44,8 @@ void ASpecialInvader::Tick(float DeltaTime)
 	const FVector Direction = (-NewLocation).GetSafeNormal();
 	SetActorRotation(Direction.Rotation());
 }
+void ASpecialInvader::SetSpeedMultiplier(float Multiplier)
+{
+	RadialSpeed *= Multiplier;
+	AngularSpeed *= Multiplier;
+}

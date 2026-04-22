@@ -9,13 +9,27 @@ ABunkerSpawner::ABunkerSpawner()
 void ABunkerSpawner::BeginPlay()
 {
 	Super::BeginPlay();
+	SpawnBunkers();
+}
 
-	if (!BunkerClass)
+void ABunkerSpawner::RespawnBunkers()
+{
+	// Destroy existing
+	for (ABunker* Bunker : SpawnedBunkers)
 	{
-		UE_LOG(LogTemp, Error, TEXT("BunkerSpawner: BunkerClass is not set"));
-		return;
+		if (IsValid(Bunker))
+		{
+			Bunker->Destroy();
+		}
 	}
+	SpawnedBunkers.Empty();
 
+	SpawnBunkers();
+}
+
+void ABunkerSpawner::SpawnBunkers()
+{
+	if (!BunkerClass) return;
 	UWorld* World = GetWorld();
 	if (!World) return;
 
@@ -28,8 +42,6 @@ void ABunkerSpawner::BeginPlay()
 		const float Y = FMath::Sin(Angle) * BunkerOrbitRadius;
 
 		const FVector SpawnLocation(X, Y, 0.f);
-
-		// Bunker faces Earth (center)
 		const FVector DirectionToCenter = (-SpawnLocation).GetSafeNormal();
 		const FRotator SpawnRotation = DirectionToCenter.Rotation();
 
@@ -37,6 +49,10 @@ void ABunkerSpawner::BeginPlay()
 		SpawnParams.Owner = this;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-		World->SpawnActor<ABunker>(BunkerClass, SpawnLocation, SpawnRotation, SpawnParams);
+		ABunker* NewBunker = World->SpawnActor<ABunker>(BunkerClass, SpawnLocation, SpawnRotation, SpawnParams);
+		if (NewBunker)
+		{
+			SpawnedBunkers.Add(NewBunker);
+		}
 	}
 }

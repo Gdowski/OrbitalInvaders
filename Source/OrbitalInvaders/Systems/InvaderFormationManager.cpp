@@ -111,6 +111,14 @@ void AInvaderFormationManager::UpdateInvaderPositions()
     {
         return !IsValid(Inv);
     });
+    
+    // Emit event when formation is cleared
+    if (Invaders.Num() == 0 && !bFormationClearedBroadcasted)
+    {
+        bFormationClearedBroadcasted = true;
+        OnFormationCleared.Broadcast();
+        return;
+    }
 
     for (AInvader* Invader : Invaders)
     {
@@ -137,4 +145,27 @@ void AInvaderFormationManager::FireRandomInvader()
     {
         Shooter->Fire();
     }
+}
+
+void AInvaderFormationManager::ClearFormation()
+{
+    for (AInvader* Invader : Invaders)
+    {
+        if (IsValid(Invader))
+        {
+            Invader->Destroy();
+        }
+    }
+    Invaders.Empty();
+}
+
+void AInvaderFormationManager::ResetFormation()
+{
+    FormationAngle = 0.f;
+    FormationRadialOffset = 0.f;
+    TimeSinceLastJump = 0.f;
+    TimeSinceLastFire = 0.f;
+    TimeSinceLastReversal = 0.f;
+    RotationDirection = 1.f;
+    bFormationClearedBroadcasted = false;
 }

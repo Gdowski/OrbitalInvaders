@@ -116,3 +116,15 @@ void AAsteroidSpawner::RegisterAsteroid(AAsteroid* Asteroid)
 		SpawnedAsteroids.AddUnique(Asteroid);
 	}
 }
+
+void AAsteroidSpawner::ClearAllAsteroids()
+{
+	for (AAsteroid* Asteroid : SpawnedAsteroids)
+	{
+		if (IsValid(Asteroid))
+		{
+			Asteroid->Destroy();
+		}
+	}
+	SpawnedAsteroids.Empty();
+}

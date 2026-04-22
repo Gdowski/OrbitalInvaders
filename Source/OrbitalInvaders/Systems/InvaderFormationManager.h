@@ -6,6 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "InvaderFormationManager.generated.h"
 
+/** Broadcast when no invaders. */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFormationCleared);
+
 /**
  * AInvaderFormationManager - spawns and orchestrates the invader formation.
  */
@@ -18,6 +21,26 @@ public:
     AInvaderFormationManager();
 
     virtual void Tick(float DeltaTime) override;
+    
+    /** Returns number of living invaders. */
+    UFUNCTION(BlueprintPure, Category = "Formation")
+    int32 GetLivingInvaderCount() const { return Invaders.Num(); }
+    
+    void SpawnFormation();
+    void ClearFormation();
+    void ResetFormation();
+
+    // Getters/setters for wave scaling
+    float GetRotationSpeed() const { return RotationSpeed; }
+    void SetRotationSpeed(float NewSpeed) { RotationSpeed = NewSpeed; }
+    float GetFireInterval() const { return FireInterval; }
+    void SetFireInterval(float NewInterval) { FireInterval = NewInterval; }
+    float GetJumpInterval() const { return JumpInterval; }
+    void SetJumpInterval(float NewInterval) { JumpInterval = NewInterval; }
+    
+    /** Event when all invaders are destroyed. For WaveManager. */
+    UPROPERTY(BlueprintAssignable, Category = "Formation")
+    FOnFormationCleared OnFormationCleared;
 
 protected:
     virtual void BeginPlay() override;
@@ -60,6 +83,9 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Formation")
     float GameOverRadius = 800.f;
 private:
+    
+    bool bFormationClearedBroadcasted = false;
+    
     // Runtime state
     float TimeSinceLastFire = 0.f;
     
@@ -81,7 +107,7 @@ private:
 
     // Internal methods
     
-    void SpawnFormation();
+
 
     void PerformJump();
 

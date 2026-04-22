@@ -3,6 +3,15 @@
 
 #include "OrbitalGameState.h"
 
+#include "OrbitalSaveGame.h"
+#include "Kismet/GameplayStatics.h"
+
+void AOrbitalGameState::BeginPlay()
+{
+	Super::BeginPlay();
+	LoadHighScore();
+}
+
 void AOrbitalGameState::SetGameplayState(EGameplayState NewState)
 {
 	GameplayState = NewState;
@@ -26,4 +35,37 @@ void AOrbitalGameState::AddScoreFor(EScoreEvent Event)
 	case EScoreEvent::AsteroidLargeHit:      Value = 200;  break;
 	}
 	AddScore(Value);
+}
+
+void AOrbitalGameState::LoadHighScore()
+{
+	if (USaveGame* Loaded = UGameplayStatics::LoadGameFromSlot(UOrbitalSaveGame::SaveSlotName, 0))
+	{
+		if (UOrbitalSaveGame* Save = Cast<UOrbitalSaveGame>(Loaded))
+		{
+			HighScore = Save->HighScore;
+			UE_LOG(LogTemp, Warning, TEXT("High score loaded: %d"), HighScore);
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No save file found, starting fresh"));
+	}
+}
+
+void AOrbitalGameState::SaveHighScoreIfNeeded()
+{
+	if (Score <= HighScore) return;
+
+	HighScore = Score;
+
+	UOrbitalSaveGame* Save = Cast<UOrbitalSaveGame>(
+		UGameplayStatics::CreateSaveGameObject(UOrbitalSaveGame::StaticClass()));
+
+	if (Save)
+	{
+		Save->HighScore = HighScore;
+		UGameplayStatics::SaveGameToSlot(Save, UOrbitalSaveGame::SaveSlotName, 0);
+		UE_LOG(LogTemp, Warning, TEXT("New high score saved: %d"), HighScore);
+	}
 }

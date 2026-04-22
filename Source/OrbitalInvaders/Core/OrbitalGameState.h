@@ -51,11 +51,26 @@ public:
 	/** Award score for a named event. GameState owns the point values. */
 	UFUNCTION(BlueprintCallable, Category = "Score")
 	void AddScoreFor(EScoreEvent Event);
+	
+	UFUNCTION(BlueprintPure, Category = "Score")
+	int32 GetHighScore() const { return HighScore; }
+
+	/** Load high score from disk. Called at BeginPlay. */
+	void LoadHighScore();
+
+	/** Save high score to disk if current score is higher. Called at Game Over. */
+	void SaveHighScoreIfNeeded();
 
 protected:
+	
+	virtual void BeginPlay() override;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Gameplay")
 	EGameplayState GameplayState = EGameplayState::Playing;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Score")
 	int32 Score = 0;
+	
+private:
+	int32 HighScore = 0;
 };

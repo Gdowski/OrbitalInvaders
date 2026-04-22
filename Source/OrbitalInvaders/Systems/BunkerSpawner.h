@@ -15,6 +15,8 @@ class ORBITALINVADERS_API ABunkerSpawner : public AActor
 
 public:
 	ABunkerSpawner();
+	
+	void RespawnBunkers();
 
 protected:
 	virtual void BeginPlay() override;
@@ -30,4 +32,10 @@ protected:
 	/** Radius at which bunkers are placed (UE units). Should be between player orbit and invader orbit. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Bunker")
 	float BunkerOrbitRadius = 1100.f;
+	
+private:
+	UPROPERTY()
+	TArray<TObjectPtr<class ABunker>> SpawnedBunkers;
+	
+	void SpawnBunkers();
 };

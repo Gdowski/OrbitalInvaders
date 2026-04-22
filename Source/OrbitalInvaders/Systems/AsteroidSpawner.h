@@ -21,6 +21,10 @@ public:
 	/** Called by child asteroids after split to register them. */
 	UFUNCTION(BlueprintCallable, Category = "Spawner")
 	void RegisterAsteroid(class AAsteroid* Asteroid);
+	
+	void ClearAllAsteroids();
+	float GetSpawnInterval() const { return SpawnInterval; }
+	void SetSpawnInterval(float NewInterval) { SpawnInterval = NewInterval; }
 
 protected:
 	virtual void BeginPlay() override;

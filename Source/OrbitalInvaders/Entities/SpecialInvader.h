@@ -22,6 +22,8 @@ public:
 	ASpecialInvader();
 
 	virtual void Tick(float DeltaTime) override;
+	/** Scale radial and angular speed. Called by spawner after spawn. */
+	void SetSpeedMultiplier(float Multiplier);
 
 protected:
 	virtual void BeginPlay() override;

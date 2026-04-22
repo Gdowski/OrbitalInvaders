@@ -41,10 +41,25 @@ void ASpecialInvaderSpawner::SpawnSpecialInvader()
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	// SpecialInvader computes its own location in BeginPlay + Tick, so spawn at origin
-	World->SpawnActor<ASpecialInvader>(
+	ActiveSpecialInvader = World->SpawnActor<ASpecialInvader>(
 		SpecialInvaderClass,
 		FVector::ZeroVector,
 		FRotator::ZeroRotator,
 		SpawnParams
 	);
+	// Apply wave scaling to movement speed
+	if (ActiveSpecialInvader)
+	{
+		ActiveSpecialInvader->SetSpeedMultiplier(SpeedMultiplier);
+	}
+}
+void ASpecialInvaderSpawner::ClearAndReset()
+{
+	if (IsValid(ActiveSpecialInvader))
+	{
+		ActiveSpecialInvader->Destroy();
+	}
+	ActiveSpecialInvader = nullptr;
+	TimeSinceLastSpawn = 0.f;
+	bFirstSpawnDone = false;
 }

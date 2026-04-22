@@ -17,6 +17,9 @@ public:
 	ASpecialInvaderSpawner();
 
 	virtual void Tick(float DeltaTime) override;
+	void ClearAndReset();
+	float GetSpeedMultiplier() const { return SpeedMultiplier; }
+	void SetSpeedMultiplier(float NewMultiplier) { SpeedMultiplier = NewMultiplier; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -37,4 +40,9 @@ private:
 	bool bFirstSpawnDone = false;
 
 	void SpawnSpecialInvader();
+	
+	UPROPERTY()
+	TObjectPtr<class ASpecialInvader> ActiveSpecialInvader;
+	/** Applied to RadialSpeed and AngularSpeed of spawned special invaders. */
+	float SpeedMultiplier = 1.f;
 };
