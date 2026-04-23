@@ -118,6 +118,13 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visuals")
     float RollInterpSpeed = 8.f;
 
+    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+    float FireCooldown = 0.25f;  
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+    float LastFireTime = -FLT_MAX;  
+
 private:
     //  Runtime state 
     bool bIsInvincible = false;
@@ -130,7 +137,6 @@ private:
     float CurrentAngle = 0.f;
     float InputDirection  = 0.f;
     //  Internal methods 
-
     /** Recomputes actor location and rotation from CurrentAngle + OrbitRadius. */
     void UpdateOrbitalPosition();
 

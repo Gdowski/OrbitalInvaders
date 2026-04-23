@@ -113,8 +113,9 @@ void AInvader::HandleOverlap(
 	}
 	
 	// Hit by asteroid — invader dies
-	if (Cast<AAsteroid>(OtherActor))
+	if (AAsteroid* Asteroid = Cast<AAsteroid>(OtherActor))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Invader hit by asteroid"));
 		OnDeath();
 		return;
 	}

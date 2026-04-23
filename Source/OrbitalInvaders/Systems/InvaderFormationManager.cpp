@@ -76,7 +76,7 @@ void AInvaderFormationManager::SpawnFormation()
     {
         for (int32 InvaderIdx = 0; InvaderIdx < InvadersPerOrbit; ++InvaderIdx)
         {
-            const float Offset = AngleStep * static_cast<float>(InvaderIdx);
+            const float Offset = AngleStep * static_cast<float>(InvaderIdx)+0.1*OrbitIdx;
 
             // Spawn at origin; position will be set in SetOrbitalPosition
             FActorSpawnParameters SpawnParams;

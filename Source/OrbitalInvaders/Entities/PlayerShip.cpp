@@ -92,7 +92,7 @@ void APlayerShip::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		}
 		if (FireAction)
 		{
-			EnhancedInput->BindAction(FireAction, ETriggerEvent::Started, this, &APlayerShip::Fire);
+			EnhancedInput->BindAction(FireAction, ETriggerEvent::Triggered, this, &APlayerShip::Fire);
 		}
 		if (PauseAction)
 		{
@@ -136,7 +136,12 @@ void APlayerShip::Fire()
 
 	UWorld* World = GetWorld();
 	if (!World) return;
-	
+	const float Now = GetWorld()->GetTimeSeconds();
+	if (Now - LastFireTime <= FireCooldown)
+	{
+		return;
+	}
+	LastFireTime = Now;
 	if (ShootSound)
 	{
 		UVFXHelper::PlaySFX2D(this, ShootSound);
