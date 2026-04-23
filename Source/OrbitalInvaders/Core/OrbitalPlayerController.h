@@ -32,11 +32,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effects")
 	TSubclassOf<class UCameraShakeBase> HitShakeClass;
 	
-	/** HUD widget class. Assigned in BP subclass. */
+	/** HUD widget class. Assigned in BP. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
 	TSubclassOf<class UOrbitalHUD> HUDWidgetClass;
 
 	UPROPERTY()
 	TObjectPtr<class UOrbitalHUD> HUDWidget;
+	
 	
 };

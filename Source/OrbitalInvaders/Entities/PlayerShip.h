@@ -31,6 +31,9 @@ public:
 
     UFUNCTION(BlueprintPure, Category = "Health")
     int32 GetCurrentHealth() const { return CurrentHealth; }
+    
+    UFUNCTION(BlueprintPure, Category = "Health")
+    int32 GetMaxHealth() const { return MaxHealth; }
 
 protected:
     virtual void BeginPlay() override;

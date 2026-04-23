@@ -7,6 +7,7 @@
 #include "OrbitalHUD.h"
 #include "Kismet/GameplayStatics.h"
 #include "OrbitalInvaders/Entities/Earth.h"
+#include "OrbitalInvaders/Entities/PlayerShip.h"
 
 void AOrbitalPlayerController::BeginPlay()
 {
@@ -29,6 +30,10 @@ void AOrbitalPlayerController::BeginPlay()
 			if (AEarth* Earth = Cast<AEarth>(UGameplayStatics::GetActorOfClass(GetWorld(), AEarth::StaticClass())))
 			{
 				HUDWidget->InitEarthHealth(Earth->GetMaxHealth());
+			}
+			if (APlayerShip* PlayerShip = Cast<APlayerShip>(UGameplayStatics::GetPlayerPawn(this, 0)))
+			{
+				HUDWidget->InitPlayerHealth(PlayerShip->GetMaxHealth());
 			}
 			HUDWidget->AddToViewport(0);
 		}

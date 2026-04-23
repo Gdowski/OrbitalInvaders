@@ -24,6 +24,7 @@ APlayerShip::APlayerShip()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
+	CurrentHealth = MaxHealth;
 	CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionComponent"));
 	CollisionComponent->InitSphereRadius(50.f);
 	CollisionComponent->SetCollisionProfileName(TEXT("Player"));
@@ -53,7 +54,6 @@ APlayerShip::APlayerShip()
 void APlayerShip::BeginPlay()
 {
 	Super::BeginPlay();
-	CurrentHealth = MaxHealth;
 	CurrentAngle = PI / 2.f;
 	//initialize the position of the player
 	UpdateOrbitalPosition();
@@ -63,10 +63,6 @@ void APlayerShip::BeginPlay()
 		CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &APlayerShip::HandleOverlap);
 	}
 	
-	if (AOrbitalPlayerController* PC = Cast<AOrbitalPlayerController>(GetController()))
-	{
-		PC->GetHUD()->InitPlayerHealth(CurrentHealth);
-	}
 }
 
 // Called every frame
