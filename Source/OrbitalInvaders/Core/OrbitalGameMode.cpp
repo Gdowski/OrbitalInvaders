@@ -51,4 +51,7 @@ void AOrbitalGameMode::TriggerGameOver(const FString& Reason)
 	{
 		bool bResult = PC->SetPause(true);
 	}
+	
+	//here need to add the event dispatch	
+	OnGameLost.Broadcast(Reason);
 }

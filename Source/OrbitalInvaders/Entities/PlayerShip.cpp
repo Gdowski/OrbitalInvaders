@@ -53,6 +53,7 @@ APlayerShip::APlayerShip()
 void APlayerShip::BeginPlay()
 {
 	Super::BeginPlay();
+	CurrentHealth = MaxHealth;
 	CurrentAngle = PI / 2.f;
 	//initialize the position of the player
 	UpdateOrbitalPosition();
@@ -61,6 +62,11 @@ void APlayerShip::BeginPlay()
 	{
 		CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &APlayerShip::HandleOverlap);
 	}
+	
+	if (AOrbitalPlayerController* PC = Cast<AOrbitalPlayerController>(GetController()))
+	{
+		PC->GetHUD()->InitPlayerHealth(CurrentHealth);
+	}
 }
 
 // Called every frame
@@ -68,18 +74,10 @@ void APlayerShip::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	// Tangent vector pointing CCW
-	const FVector2D Tangent(-FMath::Sin(CurrentAngle), FMath::Cos(CurrentAngle));
-	
-	const float OrbitalDir = FVector2D::DotProduct(InputVector, Tangent);
-	const float Direction = (FMath::Abs(OrbitalDir) > OrbitalDeadzone)
-	? FMath::Sign(OrbitalDir)
-	: 0.f;
-	
-	CurrentAngle += Direction * AngularSpeed * DeltaTime;
+	CurrentAngle += InputDirection * AngularSpeed * DeltaTime;
 	CurrentAngle = FMath::Fmod(CurrentAngle, 2.f * PI);
 	
-	const float TargetRoll = Direction * MaxRollAngle;
+	const float TargetRoll = InputDirection * MaxRollAngle;
 	CurrentRoll = FMath::FInterpTo(CurrentRoll, TargetRoll, DeltaTime, RollInterpSpeed);
 
 	UpdateOrbitalPosition();
@@ -100,6 +98,10 @@ void APlayerShip::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		{
 			EnhancedInput->BindAction(FireAction, ETriggerEvent::Started, this, &APlayerShip::Fire);
 		}
+		if (PauseAction)
+		{
+			EnhancedInput->BindAction(PauseAction, ETriggerEvent::Started, this, &APlayerShip::TogglePause);
+		}
 	}
 	
 }
@@ -118,17 +120,18 @@ void APlayerShip::UpdateOrbitalPosition()
 	FRotator NewRotation = DirectionToCenter.Rotation();
 	NewRotation.Roll = CurrentRoll;
 	SetActorRotation(NewRotation);
+	
 }
 
 void APlayerShip::Move(const FInputActionValue& Value)
 {
-	InputVector = Value.Get<FVector2D>();
+	InputDirection = Value.Get<float>();
 
 }
 
 void APlayerShip::StopMove(const FInputActionValue& Value)
 {
-	InputVector = FVector2D::ZeroVector;
+	InputDirection = 0.0f;
 }
 
 void APlayerShip::Fire()
@@ -176,6 +179,7 @@ int32 APlayerShip::ApplyDamage(int32 Amount)
 	if (AOrbitalPlayerController* PC = Cast<AOrbitalPlayerController>(GetController()))
 	{
 		PC->PlayCameraShake(1.f);  // full intensity for player hit
+		PC->GetHUD()->UpdatePlayerHealth(CurrentHealth);
 	}
 	
 	if (CurrentHealth <= 0)
@@ -254,5 +258,24 @@ void APlayerShip::ToggleMeshVisibility()
 	if (ShipMesh)
 	{
 		ShipMesh->ToggleVisibility();
+	}
+}
+
+void APlayerShip::TogglePause()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Pause"));
+	if (AOrbitalPlayerController* PC = Cast<AOrbitalPlayerController>(GetController()))
+	{
+		if (PC->IsPaused())
+		{
+			PC->SetPause(false);
+			if (PauseWidget) PauseWidget->RemoveFromParent();
+		}
+		else
+		{
+			PC->SetPause(true);
+			PauseWidget = CreateWidget<UUserWidget>(PC, PauseWidgetClass);
+			PauseWidget->AddToViewport(1);
+		}
 	}
 }

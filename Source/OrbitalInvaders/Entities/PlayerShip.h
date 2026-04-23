@@ -92,6 +92,15 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
     TObjectPtr<class UInputAction> FireAction;
     
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+    TObjectPtr<UInputAction> PauseAction;
+    
+    UPROPERTY(EditDefaultsOnly, Category = "Input")
+    TSubclassOf<UUserWidget> PauseWidgetClass;
+
+    UPROPERTY()
+    TObjectPtr<UUserWidget> PauseWidget;
+    
     /** Duration of invincibility after being hit (seconds). */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
     float InvincibilityDuration = 1.5f;
@@ -116,8 +125,7 @@ private:
     void ToggleMeshVisibility();
     /** Current angle on the orbit (radians). */
     float CurrentAngle = 0.f;
-    FVector2D InputVector = FVector2D::ZeroVector;
-
+    float InputDirection  = 0.f;
     //  Internal methods 
 
     /** Recomputes actor location and rotation from CurrentAngle + OrbitRadius. */
@@ -127,6 +135,7 @@ private:
     void Move(const struct FInputActionValue& Value);
     void StopMove(const struct FInputActionValue& Value);
     void Fire();
+    void TogglePause();
     
     UFUNCTION()
     void HandleOverlap(

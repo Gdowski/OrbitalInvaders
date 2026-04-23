@@ -3,6 +3,7 @@
 #include "AsteroidSpawner.h"
 #include "BunkerSpawner.h"
 #include "SpecialInvaderSpawner.h"
+#include "OrbitalInvaders/Core/OrbitalPlayerController.h"
 
 AWaveManager::AWaveManager()
 {
@@ -47,7 +48,16 @@ void AWaveManager::StartNextWave()
     bWaitingForNextWave = false;
 
     UE_LOG(LogTemp, Warning, TEXT("=== WAVE %d START ==="), CurrentWave);
-
+    if (UWorld* World = GetWorld())
+    {
+        if (APlayerController* PC = World->GetFirstPlayerController())
+        {
+            if (AOrbitalPlayerController* OPC = Cast<AOrbitalPlayerController>(PC))
+            {
+                OPC->GetHUD()->UpdateWave(CurrentWave);
+            }
+        }
+    }
     // Respawn bunkers fresh
     if (BunkerSpawner) BunkerSpawner->RespawnBunkers();
 
@@ -68,6 +78,12 @@ void AWaveManager::ApplyWaveScaling()
         FormationManager->SetRotationSpeed(FormationManager->GetRotationSpeed() * RotationSpeedScale);
         FormationManager->SetFireInterval(FormationManager->GetFireInterval() * FireIntervalScale);
         FormationManager->SetJumpInterval(FormationManager->GetJumpInterval() * JumpIntervalScale);
+        FormationManager->SetInvadersPerOrbit(FormationManager->GetInvadersPerOrbit()+1);
+        if (CurrentWave % 3 == 0)
+        {
+            FormationManager->SetOrbitCount(FormationManager->GetOrbitCount() + 1);
+        }
+        
     }
     if (AsteroidSpawner)
     {

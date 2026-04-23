@@ -82,7 +82,7 @@ void AInvaderFormationManager::SpawnFormation()
             FActorSpawnParameters SpawnParams;
             SpawnParams.Owner = this;
             SpawnParams.SpawnCollisionHandlingOverride =
-                ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+                ESpawnActorCollisionHandlingMethod::AlwaysSpawn;    
 
             AInvader* NewInvader = World->SpawnActor<AInvader>(
                 InvaderClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);

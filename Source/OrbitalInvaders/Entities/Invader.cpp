@@ -98,10 +98,7 @@ void AInvader::HandleOverlap(
 	{
 		if (Projectile->IsPlayerProjectile())
 		{
-			if (AOrbitalGameState* GS = GetWorld()->GetGameState<AOrbitalGameState>())
-			{
-				GS->AddScoreFor(GetScoreEvent());
-			}
+			OnPlayerKill();
 		}
 		ApplyDamage(1);
 		Projectile->Destroy();
@@ -147,5 +144,13 @@ void AInvader::Fire()
 	if (Projectile)
 	{
 		Projectile->Init(FireDirection);
+	}
+}
+
+void AInvader::OnPlayerKill()
+{
+	if (AOrbitalGameState* GS = GetWorld()->GetGameState<AOrbitalGameState>())
+	{
+		GS->AddScoreFor(EScoreEvent::InvaderKilled);
 	}
 }

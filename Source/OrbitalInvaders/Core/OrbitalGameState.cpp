@@ -3,6 +3,7 @@
 
 #include "OrbitalGameState.h"
 
+#include "OrbitalPlayerController.h"
 #include "OrbitalSaveGame.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -21,6 +22,16 @@ void AOrbitalGameState::AddScore(int32 Delta)
 {
 	Score += Delta;
 	UE_LOG(LogTemp, Warning, TEXT("Score: %d (+%d)"), Score, Delta);
+	if (UWorld* World = GetWorld())
+	{
+		if (APlayerController* PC = World->GetFirstPlayerController())
+		{
+			if (AOrbitalPlayerController* OPC = Cast<AOrbitalPlayerController>(PC))
+			{
+				OPC->GetHUD()->UpdateScore(Score);
+			}
+		}
+	}
 }
 
 void AOrbitalGameState::AddScoreFor(EScoreEvent Event)

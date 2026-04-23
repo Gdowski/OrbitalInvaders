@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "OrbitalInvaders/Core/OrbitalGameState.h"
 #include "Invader.generated.h"
 
 /**
@@ -75,7 +74,9 @@ protected:
 	/** Called when this invader dies (HP <= 0). Override for custom death behavior. */
 	virtual void OnDeath();
 	
-	virtual EScoreEvent GetScoreEvent() const { return EScoreEvent::InvaderKilled; }
+	/** Called when killed by player projectile. Override for special effects. */
+	virtual void OnPlayerKill();
+	
 	/** Niagara effect spawned on death. Assigned in BP. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "VFX")
 	TObjectPtr<class UNiagaraSystem> DeathExplosionEffect;

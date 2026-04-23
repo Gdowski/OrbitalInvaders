@@ -6,6 +6,11 @@
 #include "GameFramework/GameModeBase.h"
 #include "OrbitalGameMode.generated.h"
 
+
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGameLost,FString,Reason);
+
+
 /**
  * AOrbitalGameMode - top-level game rules controller.
  *
@@ -26,6 +31,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	void TriggerGameOver(const FString& Reason);
+	/** Event when game is over */
+	UPROPERTY(BlueprintAssignable, Category = "Gameplay")
+	FOnGameLost OnGameLost;
 	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
