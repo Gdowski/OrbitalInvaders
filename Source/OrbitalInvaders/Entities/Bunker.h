@@ -38,6 +38,9 @@ protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
     TObjectPtr<class UStaticMeshComponent> BunkerMesh;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SFX")
+    TObjectPtr<class USoundBase> HitSound;
 
     //  Health 
 

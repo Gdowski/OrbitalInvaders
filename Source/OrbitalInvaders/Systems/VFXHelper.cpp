@@ -1,5 +1,6 @@
 #include "VFXHelper.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Kismet/GameplayStatics.h"
 
 void UVFXHelper::SpawnExplosion(
 	const UObject* WorldContextObject,
@@ -19,4 +20,10 @@ void UVFXHelper::SpawnExplosion(
 		true,   // auto-activate
 		ENCPoolMethod::None
 	);
+}
+
+void UVFXHelper::PlaySFX2D(const UObject* WorldContextObject, USoundBase* Sound)
+{
+	if (!Sound || !WorldContextObject) return;
+	UGameplayStatics::PlaySound2D(WorldContextObject, Sound);
 }

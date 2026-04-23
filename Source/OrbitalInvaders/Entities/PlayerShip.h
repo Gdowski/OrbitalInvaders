@@ -49,6 +49,11 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
     TObjectPtr<class UCameraComponent> Camera;
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SFX")
+    TObjectPtr<class USoundBase> ShootSound;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SFX")
+    TObjectPtr<class USoundBase> HitSound;
     //  Orbit configuration 
 
     /** Orbit radius from the center of the world (UE units, cm). */

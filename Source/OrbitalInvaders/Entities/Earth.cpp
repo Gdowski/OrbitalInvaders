@@ -6,6 +6,7 @@
 #include "Projectile.h"
 #include "OrbitalInvaders/Core/OrbitalGameMode.h"
 #include "OrbitalInvaders/Core/OrbitalPlayerController.h"
+#include "OrbitalInvaders/Systems/VFXHelper.h"
 
 AEarth::AEarth()
 {
@@ -36,7 +37,10 @@ int32 AEarth::ApplyDamage(int32 Amount)
 {
 	CurrentHealth = FMath::Max(0, CurrentHealth - Amount);
 	UE_LOG(LogTemp, Warning, TEXT("Earth HP: %d/%d"), CurrentHealth, MaxHealth);
-	
+	if (HitSound)
+	{
+		UVFXHelper::PlaySFX2D(this, HitSound);
+	}
 	
 	// Screen shake
 	if (UWorld* World = GetWorld())

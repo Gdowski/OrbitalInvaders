@@ -141,6 +141,10 @@ void AAsteroid::SplitOrDestroy()
 		if (ChildA) Spawner->RegisterAsteroid(ChildA);
 		if (ChildB) Spawner->RegisterAsteroid(ChildB);
 	}
+	if (ExplosionSound)
+	{
+		UVFXHelper::PlaySFX2D(this, ExplosionSound);
+	}
 	if (ExplosionEffect)
 	{
 		const float VFXScale = (Size == EAsteroidSize::Large) ? 2.f

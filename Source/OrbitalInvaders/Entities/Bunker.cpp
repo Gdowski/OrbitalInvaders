@@ -34,7 +34,10 @@ void ABunker::BeginPlay()
 int32 ABunker::ApplyDamage(int32 Amount)
 {
     CurrentHealth = FMath::Max(0, CurrentHealth - Amount);
-
+    if (HitSound)
+    {
+        UVFXHelper::PlaySFX2D(this, HitSound);
+    }
     if (CurrentHealth <= 0)
     {
         OnDeath();

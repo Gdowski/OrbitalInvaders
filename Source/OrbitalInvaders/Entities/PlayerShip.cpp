@@ -17,6 +17,7 @@
 #include "Projectile.h"
 #include "OrbitalInvaders/Core/OrbitalGameMode.h"
 #include "OrbitalInvaders/Core/OrbitalPlayerController.h"
+#include "OrbitalInvaders/Systems/VFXHelper.h"
 // Sets default values
 APlayerShip::APlayerShip()
 {
@@ -39,7 +40,9 @@ APlayerShip::APlayerShip()
 	SpringArm->SetRelativeRotation(FRotator(-90.f, 0.f, 0.f)); 
 	SpringArm->bDoCollisionTest = false;                     
 	SpringArm->bUsePawnControlRotation = false;
-
+	SpringArm->bInheritPitch = false;
+	SpringArm->bInheritRoll = false;
+	SpringArm->bInheritYaw = false;	
 	
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
@@ -134,7 +137,11 @@ void APlayerShip::Fire()
 
 	UWorld* World = GetWorld();
 	if (!World) return;
-
+	
+	if (ShootSound)
+	{
+		UVFXHelper::PlaySFX2D(this, ShootSound);
+	}
 	// Fire direction = outwards Earth 
 	const FVector FireDirection = GetActorLocation().GetSafeNormal();
 	const FVector SpawnLocation = GetActorLocation() + FireDirection*ProjectileSpawnOffset;
@@ -161,7 +168,10 @@ int32 APlayerShip::ApplyDamage(int32 Amount)
 {
 	CurrentHealth = FMath::Max(0, CurrentHealth - Amount);
 	UE_LOG(LogTemp, Warning, TEXT("Player HP: %d/%d"), CurrentHealth, MaxHealth);
-	
+	if (HitSound)
+	{
+		UVFXHelper::PlaySFX2D(this, HitSound);
+	}
 	// Screen shake on hit
 	if (AOrbitalPlayerController* PC = Cast<AOrbitalPlayerController>(GetController()))
 	{

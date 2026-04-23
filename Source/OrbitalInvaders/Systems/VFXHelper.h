@@ -20,4 +20,8 @@ public:
 		class UNiagaraSystem* Effect,
 		const FVector& Location,
 		float Scale = 1.f);
+	
+	UFUNCTION(BlueprintCallable, Category = "SFX", meta = (WorldContext = "WorldContextObject"))
+	static void PlaySFX2D(const UObject* WorldContextObject, class USoundBase* Sound);
+
 };

@@ -27,7 +27,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
+	virtual void OnDeath() override;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spiral")
 	float StartRadius = 2500.f;
 

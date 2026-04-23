@@ -28,5 +28,12 @@ public:
 	void TriggerGameOver(const FString& Reason);
 	
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	TObjectPtr<class USoundBase> BackgroundMusic;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	TObjectPtr<class USoundBase> GameOverSound;
+	
+protected:
 	virtual void BeginPlay() override;
 };

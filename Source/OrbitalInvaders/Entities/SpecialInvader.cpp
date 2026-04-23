@@ -3,6 +3,9 @@
 
 #include "SpecialInvader.h"
 
+#include "Kismet/GameplayStatics.h"
+#include "OrbitalInvaders/Systems/VFXHelper.h"
+
 ASpecialInvader::ASpecialInvader()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -48,4 +51,37 @@ void ASpecialInvader::SetSpeedMultiplier(float Multiplier)
 {
 	RadialSpeed *= Multiplier;
 	AngularSpeed *= Multiplier;
+}
+
+void ASpecialInvader::OnDeath()
+{
+	if (UWorld* World = GetWorld())
+	{
+		UGameplayStatics::SetGlobalTimeDilation(World, 0.15f);
+
+		// Use a latent delay in real time
+		FTimerHandle Handle;
+		World->GetTimerManager().SetTimer(Handle, [World]()
+		{
+			UGameplayStatics::SetGlobalTimeDilation(World, 1.f);
+		}, 0.4f, false);
+		// 0.05 game-seconds at 0.15 dilation = ~0.33 real seconds of slow-mo
+	}
+
+	if (DeathExplosionEffect)
+	{
+		UVFXHelper::SpawnExplosion(this, DeathExplosionEffect, GetActorLocation(), 25.f);
+	}
+
+	if (AOrbitalGameState* GS = GetWorld()->GetGameState<AOrbitalGameState>())
+	{
+		GS->AddScoreFor(EScoreEvent::SpecialInvaderKilled);
+	}
+
+	if (DeathSound)
+	{
+		UVFXHelper::PlaySFX2D(this, DeathSound);
+	}
+
+	Destroy();
 }

@@ -73,6 +73,10 @@ bool AInvader::ApplyDamage(int32 Amount)
 
 void AInvader::OnDeath()
 {
+	if (DeathSound)
+	{
+		UVFXHelper::PlaySFX2D(this, DeathSound);
+	}
 	if (DeathExplosionEffect)
 	{
 		UVFXHelper::SpawnExplosion(this, DeathExplosionEffect, GetActorLocation());
@@ -124,7 +128,10 @@ void AInvader::Fire()
 	if (!ProjectileClass) return;
 	UWorld* World = GetWorld();
 	if (!World) return;
-
+	if (ShootSound)
+	{
+		UVFXHelper::PlaySFX2D(this, ShootSound);
+	}
 	// Fire direction: toward Earth (center of world)
 	const FVector FireDirection = (-GetActorLocation()).GetSafeNormal();
 	const FVector SpawnLocation = GetActorLocation() + FireDirection * ProjectileSpawnOffset;

@@ -47,6 +47,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UProjectileMovementComponent> MovementComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SFX")
+	TObjectPtr<class USoundBase> ExplosionSound;
 	// Data 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Asteroid")

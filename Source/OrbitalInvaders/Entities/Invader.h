@@ -51,6 +51,11 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UStaticMeshComponent> InvaderMesh;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SFX")
+	TObjectPtr<class USoundBase> ShootSound;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SFX")
+	TObjectPtr<class USoundBase> DeathSound;
 
 	// Health
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
