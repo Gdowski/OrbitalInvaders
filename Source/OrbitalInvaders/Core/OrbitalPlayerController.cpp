@@ -48,3 +48,15 @@ void AOrbitalPlayerController::PlayCameraShake(float Intensity)
 		ClientStartCameraShake(HitShakeClass, Intensity);
 	}
 }
+
+AOrbitalPlayerController* AOrbitalPlayerController::Get(const UObject* WorldContextObject)
+{
+	return Cast<AOrbitalPlayerController>(
+		UGameplayStatics::GetPlayerController(WorldContextObject, 0));
+}
+
+UOrbitalHUD* AOrbitalPlayerController::GetHUDFrom(const UObject* WorldContextObject)
+{
+	AOrbitalPlayerController* PC = Get(WorldContextObject);
+	return PC ? PC->GetOrbitalHUD() : nullptr;
+}

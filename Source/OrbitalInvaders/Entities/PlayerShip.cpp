@@ -176,11 +176,14 @@ int32 APlayerShip::ApplyDamage(int32 Amount)
 	{
 		UVFXHelper::PlaySFX2D(this, HitSound);
 	}
-	// Screen shake on hit
+	// Screen shake on hit + HUD update
 	if (AOrbitalPlayerController* PC = Cast<AOrbitalPlayerController>(GetController()))
 	{
 		PC->PlayCameraShake(1.f);  // full intensity for player hit
-		PC->GetOrbitalHUD()->UpdatePlayerHealth(CurrentHealth);
+		if (UOrbitalHUD* HUD = PC->GetOrbitalHUD())
+		{
+			HUD->UpdatePlayerHealth(CurrentHealth);
+		}
 	}
 	
 	if (CurrentHealth <= 0)

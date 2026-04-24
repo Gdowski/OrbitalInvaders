@@ -22,15 +22,9 @@ void AOrbitalGameState::AddScore(int32 Delta)
 {
 	Score += Delta;
 	UE_LOG(LogTemp, Warning, TEXT("Score: %d (+%d)"), Score, Delta);
-	if (UWorld* World = GetWorld())
+	if (UOrbitalHUD* HUD = AOrbitalPlayerController::GetHUDFrom(this))
 	{
-		if (APlayerController* PC = World->GetFirstPlayerController())
-		{
-			if (AOrbitalPlayerController* OPC = Cast<AOrbitalPlayerController>(PC))
-			{
-				OPC->GetOrbitalHUD()->UpdateScore(Score);
-			}
-		}
+		HUD->UpdateScore(Score);
 	}
 }
 

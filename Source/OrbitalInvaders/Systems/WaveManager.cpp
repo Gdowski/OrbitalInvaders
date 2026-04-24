@@ -48,15 +48,9 @@ void AWaveManager::StartNextWave()
     bWaitingForNextWave = false;
 
     UE_LOG(LogTemp, Warning, TEXT("=== WAVE %d START ==="), CurrentWave);
-    if (UWorld* World = GetWorld())
+    if (UOrbitalHUD* HUD = AOrbitalPlayerController::GetHUDFrom(this))
     {
-        if (APlayerController* PC = World->GetFirstPlayerController())
-        {
-            if (AOrbitalPlayerController* OPC = Cast<AOrbitalPlayerController>(PC))
-            {
-                OPC->GetOrbitalHUD()->UpdateWave(CurrentWave);
-            }
-        }
+        HUD->UpdateWave(CurrentWave);
     }
     // Respawn bunkers fresh
     if (BunkerSpawner) BunkerSpawner->RespawnBunkers();

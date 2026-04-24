@@ -42,16 +42,13 @@ int32 AEarth::ApplyDamage(int32 Amount)
 		UVFXHelper::PlaySFX2D(this, HitSound);
 	}
 	
-	// Screen shake
-	if (UWorld* World = GetWorld())
+	// Screen shake + HUD update
+	if (AOrbitalPlayerController* PC = AOrbitalPlayerController::Get(this))
 	{
-		if (APlayerController* PC = World->GetFirstPlayerController())
+		PC->PlayCameraShake(0.1f);
+		if (UOrbitalHUD* HUD = PC->GetOrbitalHUD())
 		{
-			if (AOrbitalPlayerController* OPC = Cast<AOrbitalPlayerController>(PC))
-			{
-				OPC->PlayCameraShake(0.1f);
-				OPC->GetOrbitalHUD()->UpdateEarthHealth(CurrentHealth);
-			}
+			HUD->UpdateEarthHealth(CurrentHealth);
 		}
 	}
 	if (CurrentHealth <= 0)

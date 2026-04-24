@@ -25,7 +25,14 @@ public:
 	/** Trigger camera shake with given intensity (0.0 - 1.0). */
 	UFUNCTION(BlueprintCallable, Category = "Effects")
 	void PlayCameraShake(float Intensity = 1.f);
-    UOrbitalHUD* GetOrbitalHUD() const { return HUDWidget; }
+
+	UOrbitalHUD* GetOrbitalHUD() const { return HUDWidget; }
+
+	/** Safely retrieves the OrbitalPlayerController from any world context. Returns nullptr if unavailable. */
+	static AOrbitalPlayerController* Get(const UObject* WorldContextObject);
+
+	/** Safely retrieves the HUD widget via PlayerController. Returns nullptr if PC or HUD is unavailable. */
+	static UOrbitalHUD* GetHUDFrom(const UObject* WorldContextObject);
 
 protected:
 	/** Camera shake class used for gameplay impacts. Assigned in BP. */
