@@ -1,15 +1,15 @@
 # 🪐 Orbital Invaders
 
-A Space Invaders–inspired arcade shooter where the player orbits Earth and defends it against waves of space invaders and asteroids.
+A Space-Invaders-inspired arcade shooter where the player orbits Earth and defends it against waves of space invaders and asteroids.
 
-Built with **Unreal Engine 5.7** in **C++** and **Blueprints** as a recruitment assignment.
+Built with **Unreal Engine 5.7.4** in **C++** and **Blueprints** as a recruitment assignment.
 
 ---
 
 ## Gameplay
 
 - The player pilots a ship orbiting Earth in a full 360° circle.
-- Waves of **invaders** approach along concentric orbits, jumping closer each cycle — if any invader breaches the player's orbit, the game is over.
+- Waves of **invaders** approach along concentric orbits, jumping closer each cycle. If any invader breaches the player's orbit, the game is over.
 - The player fires projectiles radially outwards toward enemies; invaders fire inwards the same way.
 - **Asteroids** cross the playfield with wrap-around, splitting into smaller pieces when shot.
 - A rare **Special Invader** spirals in from the outer rim toward Earth.
@@ -34,6 +34,16 @@ The ship moves along its orbit based on the direction the player pushes toward. 
 | `Esc` | Pause |
 
 
+
+## Architecture notes
+
+**Coupling in overlap handlers** - `Asteroid::HandleOverlap` (and similar) directly casts to concrete classes
+(`AProjectile`, `AInvader`, etc.). If I had more time I'd replace it with `IDamageable` interface.
+
+**Score table as a switch** - `AOrbitalGameState::AddScoreFor` uses `switch` for mapping score events to 
+point values. If I had more time this would be a `UDataTable`.
+
+---
 
 ## Clone and build
 
