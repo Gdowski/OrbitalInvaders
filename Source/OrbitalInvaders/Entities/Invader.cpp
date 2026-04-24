@@ -36,15 +36,11 @@ void AInvader::BeginPlay()
 {
 	Super::BeginPlay();
 	CurrentHealth = MaxHealth;
-	UE_LOG(LogTemp, Warning, TEXT("Invader BeginPlay: CollisionComponent is %s"),
-	   CollisionComponent ? TEXT("VALID") : TEXT("NULL"));
+
 	if (CollisionComponent)
 	{
-		CollisionComponent->OnComponentBeginOverlap.AddDynamic(this,&AInvader::HandleOverlap);
-		UE_LOG(LogTemp, Warning, TEXT("Invader BeginPlay: bound=%d"),
-		CollisionComponent->OnComponentBeginOverlap.IsBound());
+		CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AInvader::HandleOverlap);
 	}
-	
 }
 
 void AInvader::SetOrbitalPosition(float Angle, float OrbitRadius, float RotationDirection)
@@ -113,9 +109,8 @@ void AInvader::HandleOverlap(
 	}
 	
 	// Hit by asteroid — invader dies
-	if (AAsteroid* Asteroid = Cast<AAsteroid>(OtherActor))
+	if (Cast<AAsteroid>(OtherActor))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Invader hit by asteroid"));
 		OnDeath();
 		return;
 	}

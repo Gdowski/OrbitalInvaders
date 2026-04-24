@@ -6,6 +6,7 @@
 #include "OrbitalPlayerController.h"
 #include "OrbitalSaveGame.h"
 #include "Kismet/GameplayStatics.h"
+#include "OrbitalInvaders/OrbitalInvaders.h"
 
 void AOrbitalGameState::BeginPlay()
 {
@@ -21,7 +22,6 @@ void AOrbitalGameState::SetGameplayState(EGameplayState NewState)
 void AOrbitalGameState::AddScore(int32 Delta)
 {
 	Score += Delta;
-	UE_LOG(LogTemp, Warning, TEXT("Score: %d (+%d)"), Score, Delta);
 	if (UOrbitalHUD* HUD = AOrbitalPlayerController::GetHUDFrom(this))
 	{
 		HUD->UpdateScore(Score);
@@ -49,12 +49,12 @@ void AOrbitalGameState::LoadHighScore()
 		if (UOrbitalSaveGame* Save = Cast<UOrbitalSaveGame>(Loaded))
 		{
 			HighScore = Save->HighScore;
-			UE_LOG(LogTemp, Warning, TEXT("High score loaded: %d"), HighScore);
+			UE_LOG(LogOrbital, Log, TEXT("High score loaded: %d"), HighScore);
 		}
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No save file found, starting fresh"));
+		UE_LOG(LogOrbital, Log, TEXT("No save file found, starting fresh"));
 	}
 }
 
@@ -71,6 +71,6 @@ void AOrbitalGameState::SaveHighScoreIfNeeded()
 	{
 		Save->HighScore = HighScore;
 		UGameplayStatics::SaveGameToSlot(Save, UOrbitalSaveGame::SaveSlotName, 0);
-		UE_LOG(LogTemp, Warning, TEXT("New high score saved: %d"), HighScore);
+		UE_LOG(LogOrbital, Log, TEXT("New high score saved: %d"), HighScore);
 	}
 }

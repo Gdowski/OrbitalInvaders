@@ -47,7 +47,6 @@ void AWaveManager::StartNextWave()
     CurrentWave++;
     bWaitingForNextWave = false;
 
-    UE_LOG(LogTemp, Warning, TEXT("=== WAVE %d START ==="), CurrentWave);
     if (UOrbitalHUD* HUD = AOrbitalPlayerController::GetHUDFrom(this))
     {
         HUD->UpdateWave(CurrentWave);
@@ -98,8 +97,6 @@ void AWaveManager::OnFormationCleared()
     WaveDelayTimer = 0.f;
 
     CleanupPlayfield();
-
-    UE_LOG(LogTemp, Warning, TEXT("Wave %d cleared! Next wave in %.1fs"), CurrentWave, WaveDelay);
 }
 
 void AWaveManager::EndPlay(const EEndPlayReason::Type EndPlayReason)

@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "InvaderFormationManager.h"
+#include "OrbitalInvaders/OrbitalInvaders.h"
 #include "OrbitalInvaders/Core/OrbitalGameMode.h"
 #include "OrbitalInvaders/Entities/Invader.h"
 
@@ -63,7 +64,7 @@ void AInvaderFormationManager::SpawnFormation()
 {
     if (!InvaderClass)
     {
-        UE_LOG(LogTemp, Error, TEXT("InvaderFormationManager: InvaderClass is not set"));
+        UE_LOG(LogOrbital, Error, TEXT("InvaderFormationManager: InvaderClass is not set"));
         return;
     }
 

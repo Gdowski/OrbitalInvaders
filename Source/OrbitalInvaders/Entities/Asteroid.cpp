@@ -164,11 +164,8 @@ void AAsteroid::HandleOverlap(
 	const FHitResult& SweepResult)
 {
 	if (!OtherActor || OtherActor == this) return;
-	if (bIsBeingDestroyed) return; 
-	
-	UE_LOG(LogTemp, Warning, TEXT("Asteroid hit by: %s (class: %s)"),
-		*OtherActor->GetName(),
-		*OtherActor->GetClass()->GetName());
+	if (bIsBeingDestroyed) return;
+
 	// Hit by projectile - split
 	if (AProjectile* Projectile = Cast<AProjectile>(OtherActor))
 	{

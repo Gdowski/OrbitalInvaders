@@ -36,7 +36,6 @@ void AEarth::BeginPlay()
 int32 AEarth::ApplyDamage(int32 Amount)
 {
 	CurrentHealth = FMath::Max(0, CurrentHealth - Amount);
-	UE_LOG(LogTemp, Warning, TEXT("Earth HP: %d/%d"), CurrentHealth, MaxHealth);
 	if (HitSound)
 	{
 		UVFXHelper::PlaySFX2D(this, HitSound);

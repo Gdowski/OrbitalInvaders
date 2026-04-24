@@ -171,7 +171,6 @@ void APlayerShip::Fire()
 int32 APlayerShip::ApplyDamage(int32 Amount)
 {
 	CurrentHealth = FMath::Max(0, CurrentHealth - Amount);
-	UE_LOG(LogTemp, Warning, TEXT("Player HP: %d/%d"), CurrentHealth, MaxHealth);
 	if (HitSound)
 	{
 		UVFXHelper::PlaySFX2D(this, HitSound);
@@ -268,7 +267,6 @@ void APlayerShip::ToggleMeshVisibility()
 
 void APlayerShip::TogglePause()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Pause"));
 	if (AOrbitalPlayerController* PC = Cast<AOrbitalPlayerController>(GetController()))
 	{
 		if (PC->IsPaused())

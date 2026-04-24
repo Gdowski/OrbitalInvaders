@@ -6,6 +6,7 @@
 #include "OrbitalPlayerController.h"
 #include "OrbitalPlayerState.h"
 #include "Kismet/GameplayStatics.h"
+#include "OrbitalInvaders/OrbitalInvaders.h"
 #include "OrbitalInvaders/Entities/PlayerShip.h"
 
 AOrbitalGameMode::AOrbitalGameMode()
@@ -20,7 +21,6 @@ AOrbitalGameMode::AOrbitalGameMode()
 void AOrbitalGameMode::BeginPlay()
 {
 	Super::BeginPlay();
-	UE_LOG(LogTemp, Warning, TEXT("BEGIN PLAY"));
 	if (BackgroundMusic)
 	{
 		UGameplayStatics::PlaySound2D(this, BackgroundMusic, 0.5f, 1.f, 0.f);
@@ -41,7 +41,7 @@ void AOrbitalGameMode::TriggerGameOver(const FString& Reason)
 		UGameplayStatics::PlaySound2D(this, GameOverSound, 1.f);
 	}
 	GS->SetGameplayState(EGameplayState::GameOver);
-	UE_LOG(LogTemp, Warning, TEXT("GAME OVER Reason: %s"), *Reason);
+	UE_LOG(LogOrbital, Log, TEXT("GAME OVER Reason: %s"), *Reason);
 	GS->SaveHighScoreIfNeeded();
 	
 	UWorld* World = GetWorld();
