@@ -7,11 +7,12 @@
 #include "OrbitalPlayerState.generated.h"
 
 /**
- * 
+ * Reserved: in a multiplayer context, per-player data (score, lives)
+ * would live here instead of in AOrbitalGameState.
  */
 UCLASS()
 class ORBITALINVADERS_API AOrbitalPlayerState : public APlayerState
 {
 	GENERATED_BODY()
-	
+
 };

@@ -21,6 +21,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Combat")
 	int32 GetMaxHealth() const { return MaxHealth; }
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Visual")
+	void OnHealthChanged(float HealthPercent);
+
 protected:
 	virtual void BeginPlay() override;
 

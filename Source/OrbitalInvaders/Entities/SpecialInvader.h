@@ -19,33 +19,38 @@ class ORBITALINVADERS_API ASpecialInvader : public AInvader
 	GENERATED_BODY()
 
 public:
-	ASpecialInvader();
+    // Constructor
+    ASpecialInvader();
 
-	virtual void Tick(float DeltaTime) override;
-	/** Scale radial and angular speed. Called by spawner after spawn. */
-	void SetSpeedMultiplier(float Multiplier);
+    // Public API
+    /** Scale radial and angular speed. Called by spawner after spawn. */
+    void SetSpeedMultiplier(float Multiplier);
 
 protected:
-	virtual void BeginPlay() override;
-	virtual void OnDeath() override;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spiral")
-	float StartRadius = 2500.f;
+    // Virtual overrides
+    virtual void BeginPlay() override;
+    virtual void Tick(float DeltaTime) override;
+    virtual void OnDeath() override;
+    virtual void OnPlayerKill() override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spiral")
-	float RadialSpeed = 150.f;
+    // Config
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spiral")
+    float StartRadius = 2500.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spiral")
-	float AngularSpeed = 1.5f;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spiral")
+    float RadialSpeed = 150.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spiral")
-	float DestroyRadius = 400.f;
-	
-	virtual void OnPlayerKill() override;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spiral")
+    float AngularSpeed = 1.5f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spiral")
+    float DestroyRadius = 400.f;
 
 private:
-	/** Accumulated time since spawn, drives spiral motion. */
-	float TimeAlive = 0.f;
+    // Runtime state
+    /** Accumulated time since spawn, drives spiral motion. */
+    float TimeAlive = 0.f;
 
-	/** Initial angular offset (random per spawn). */
-	float InitialAngle = 0.f;
+    /** Initial angular offset (random per spawn). */
+    float InitialAngle = 0.f;
 };

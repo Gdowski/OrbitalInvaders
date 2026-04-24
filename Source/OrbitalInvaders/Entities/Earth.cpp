@@ -31,6 +31,8 @@ void AEarth::BeginPlay()
 	{
 		CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AEarth::HandleOverlap);
 	}
+
+	OnHealthChanged(1.f);
 }
 
 int32 AEarth::ApplyDamage(int32 Amount)
@@ -50,6 +52,9 @@ int32 AEarth::ApplyDamage(int32 Amount)
 			HUD->UpdateEarthHealth(CurrentHealth);
 		}
 	}
+	const float HealthPercent = static_cast<float>(CurrentHealth) / static_cast<float>(MaxHealth);
+	OnHealthChanged(HealthPercent);
+
 	if (CurrentHealth <= 0)
 	{
 		if (AOrbitalGameMode* GM = GetWorld()->GetAuthGameMode<AOrbitalGameMode>())

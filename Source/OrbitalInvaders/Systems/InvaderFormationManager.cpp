@@ -6,9 +6,6 @@
 #include "OrbitalInvaders/Entities/Invader.h"
 
 
-
-
-
 AInvaderFormationManager::AInvaderFormationManager()
 {
     PrimaryActorTick.bCanEverTick = true;
