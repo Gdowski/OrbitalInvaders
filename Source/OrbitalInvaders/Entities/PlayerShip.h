@@ -21,25 +21,26 @@ class ORBITALINVADERS_API APlayerShip : public APawn
     GENERATED_BODY()
 
 public:
+    // Constructor
     APlayerShip();
 
-    virtual void Tick(float DeltaTime) override;
-    virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-    
+    // Public API
     UFUNCTION(BlueprintCallable, Category = "Health")
     int32 ApplyDamage(int32 Amount);
 
     UFUNCTION(BlueprintPure, Category = "Health")
     int32 GetCurrentHealth() const { return CurrentHealth; }
-    
+
     UFUNCTION(BlueprintPure, Category = "Health")
     int32 GetMaxHealth() const { return MaxHealth; }
 
 protected:
+    // Virtual overrides
     virtual void BeginPlay() override;
+    virtual void Tick(float DeltaTime) override;
+    virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-    //  Components 
-
+    // Components
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
     TObjectPtr<class USphereComponent> CollisionComponent;
 
@@ -52,13 +53,7 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
     TObjectPtr<class UCameraComponent> Camera;
 
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SFX")
-    TObjectPtr<class USoundBase> ShootSound;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SFX")
-    TObjectPtr<class USoundBase> HitSound;
-    //  Orbit configuration 
-
+    // Config
     /** Orbit radius from the center of the world (UE units, cm). */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Orbit")
     float OrbitRadius = 800.f;
@@ -71,8 +66,6 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Orbit", meta = (ClampMin = "0.0", ClampMax = "1.0"))
     float OrbitalDeadzone = 0.05f;
 
-    //  Combat 
-
     /** Distance from ship origin at which projectiles spawn. */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
     float ProjectileSpawnOffset = 30.f;
@@ -80,35 +73,16 @@ protected:
     /** Projectile class spawned when firing. Assigned in BP subclass. */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
     TSubclassOf<class AProjectile> ProjectileClass;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
     int32 MaxHealth = 3;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
-    int32 CurrentHealth = 3;
-
-    //  Input assets (assigned in Blueprint) 
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-    TObjectPtr<class UInputAction> MoveAction;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-    TObjectPtr<class UInputAction> FireAction;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-    TObjectPtr<UInputAction> PauseAction;
-    
-    UPROPERTY(EditDefaultsOnly, Category = "Input")
-    TSubclassOf<UUserWidget> PauseWidgetClass;
-
-    UPROPERTY()
-    TObjectPtr<UUserWidget> PauseWidget;
-    
     /** Duration of invincibility after being hit (seconds). */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
     float InvincibilityDuration = 1.5f;
-    
-    // Visual Roll
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+    float FireCooldown = 0.25f;
 
     /** Maximum roll angle when moving at full speed (degrees). */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visuals")
@@ -118,34 +92,38 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visuals")
     float RollInterpSpeed = 8.f;
 
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
-    float FireCooldown = 0.25f;  
+    //  Input assets (assigned in Blueprint)
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+    TObjectPtr<class UInputAction> MoveAction;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+    TObjectPtr<class UInputAction> FireAction;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+    TObjectPtr<UInputAction> PauseAction;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Input")
+    TSubclassOf<UUserWidget> PauseWidgetClass;
+
+    // SFX / VFX
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SFX")
+    TObjectPtr<class USoundBase> ShootSound;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SFX")
+    TObjectPtr<class USoundBase> HitSound;
+
+    // Runtime state
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+    int32 CurrentHealth = 3;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
-    float LastFireTime = -FLT_MAX;  
+    float LastFireTime = -FLT_MAX;
+
+    UPROPERTY()
+    TObjectPtr<UUserWidget> PauseWidget;
 
 private:
-    //  Runtime state 
-    bool bIsInvincible = false;
-    FTimerHandle InvincibilityTimerHandle;
-    FTimerHandle BlinkTimerHandle;
-    float CurrentRoll = 0.f;    
-    void EndInvincibility();
-    void ToggleMeshVisibility();
-    /** Current angle on the orbit (radians). */
-    float CurrentAngle = 0.f;
-    float InputDirection  = 0.f;
-    //  Internal methods 
-    /** Recomputes actor location and rotation from CurrentAngle + OrbitRadius. */
-    void UpdateOrbitalPosition();
-
-    /** Input handlers. */
-    void Move(const struct FInputActionValue& Value);
-    void StopMove(const struct FInputActionValue& Value);
-    void Fire();
-    void TogglePause();
-    
+    // Overlap callbacks
     UFUNCTION()
     void HandleOverlap(
         UPrimitiveComponent* OverlappedComponent,
@@ -154,4 +132,21 @@ private:
         int32 OtherBodyIndex,
         bool bFromSweep,
         const FHitResult& SweepResult);
+
+    // Internal helpers
+    void UpdateOrbitalPosition();
+    void Move(const struct FInputActionValue& Value);
+    void StopMove(const struct FInputActionValue& Value);
+    void Fire();
+    void TogglePause();
+    void EndInvincibility();
+    void ToggleMeshVisibility();
+
+    // Runtime state
+    bool bIsInvincible = false;
+    FTimerHandle InvincibilityTimerHandle;
+    FTimerHandle BlinkTimerHandle;
+    float CurrentAngle = 0.f;
+    float InputDirection = 0.f;
+    float CurrentRoll = 0.f;
 };

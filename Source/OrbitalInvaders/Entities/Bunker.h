@@ -16,8 +16,10 @@ class ORBITALINVADERS_API ABunker : public AActor
     GENERATED_BODY()
 
 public:
+    // Constructor
     ABunker();
 
+    // Public API
     UFUNCTION(BlueprintCallable, Category = "Combat")
     int32 ApplyDamage(int32 Amount);
 
@@ -28,40 +30,42 @@ public:
     int32 GetMaxHealth() const { return MaxHealth; }
 
 protected:
+    // Virtual overrides
     virtual void BeginPlay() override;
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "VFX")
-    TObjectPtr<class UNiagaraSystem> DestructionEffect;
-    //  Components 
 
+    // Components
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
     TObjectPtr<class UBoxComponent> CollisionComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
     TObjectPtr<class UStaticMeshComponent> BunkerMesh;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SFX")
-    TObjectPtr<class USoundBase> HitSound;
 
-    //  Health 
-
+    // Config
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
     int32 MaxHealth = 5;
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visuals")
+    TArray<TObjectPtr<class UStaticMesh>> DamageStateMeshes;
+
+    // SFX / VFX
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SFX")
+    TObjectPtr<class USoundBase> HitSound;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "VFX")
+    TObjectPtr<class UNiagaraSystem> DestructionEffect;
+
+    // Runtime state
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
     int32 CurrentHealth = 5;
 
-    //  Visual damage states 
-
-    /** Meshes for different damage levels (0 = pristine, last = most damaged). Assigned in BP. */
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visuals")
-    TArray<TObjectPtr<class UStaticMesh>> DamageStateMeshes;
+    // Virtual hooks
+    void OnDeath();
 
     UFUNCTION(BlueprintCallable, Category = "Visuals")
     void UpdateDamageVisual();
 
-    void OnDeath();
-
 private:
+    // Overlap callbacks
     UFUNCTION()
     void HandleOverlap(
         UPrimitiveComponent* OverlappedComponent,

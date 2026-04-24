@@ -17,19 +17,20 @@ class ORBITALINVADERS_API AWaveManager : public AActor
     GENERATED_BODY()
 
 public:
+    // Constructor
     AWaveManager();
 
-    virtual void Tick(float DeltaTime) override;
-
+    // Public API
     UFUNCTION(BlueprintPure, Category = "Wave")
     int32 GetCurrentWave() const { return CurrentWave; }
 
 protected:
+    // Virtual overrides
     virtual void BeginPlay() override;
+    virtual void Tick(float DeltaTime) override;
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
-    // ===== References to spawners (assigned in BP) =====
-
+    // Config
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Wave|References")
     TObjectPtr<class AInvaderFormationManager> FormationManager;
 
@@ -42,13 +43,9 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Wave|References")
     TObjectPtr<class ASpecialInvaderSpawner> SpecialInvaderSpawner;
 
-    // Configuration
-
     /** Delay between wave clear and next wave spawn (seconds). */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Wave")
     float WaveDelay = 3.f;
-
-    // Scaling per wave
 
     /** Multiplier applied to formation rotation speed each wave. */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Wave|Scaling")
@@ -71,13 +68,11 @@ protected:
     float SpecialInvaderSpeedScale = 1.15f;
 
 private:
-    int32 CurrentWave = 1;
-    bool bWaitingForNextWave = false;
-    float WaveDelayTimer = 0.f;
-
-    UFUNCTION()                              
+    // Overlap callbacks
+    UFUNCTION()
     void OnFormationCleared();
 
+    // Internal helpers
     /** Clean the playfield between waves. */
     void CleanupPlayfield();
 
@@ -86,4 +81,9 @@ private:
 
     /** Apply scaling multipliers to all spawners. */
     void ApplyWaveScaling();
+
+    // Runtime state
+    int32 CurrentWave = 1;
+    bool bWaitingForNextWave = false;
+    float WaveDelayTimer = 0.f;
 };

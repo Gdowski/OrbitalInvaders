@@ -14,56 +14,55 @@ class ORBITALINVADERS_API AAsteroidSpawner : public AActor
 	GENERATED_BODY()
 
 public:
-	AAsteroidSpawner();
+    // Constructor
+    AAsteroidSpawner();
 
-	virtual void Tick(float DeltaTime) override;
-	
-	/** Called by child asteroids after split to register them. */
-	UFUNCTION(BlueprintCallable, Category = "Spawner")
-	void RegisterAsteroid(class AAsteroid* Asteroid);
-	
-	void ClearAllAsteroids();
-	float GetSpawnInterval() const { return SpawnInterval; }
-	void SetSpawnInterval(float NewInterval) { SpawnInterval = NewInterval; }
+    // Public API
+    /** Called by child asteroids after split to register them. */
+    UFUNCTION(BlueprintCallable, Category = "Spawner")
+    void RegisterAsteroid(class AAsteroid* Asteroid);
+
+    void ClearAllAsteroids();
+    float GetSpawnInterval() const { return SpawnInterval; }
+    void SetSpawnInterval(float NewInterval) { SpawnInterval = NewInterval; }
 
 protected:
-	virtual void BeginPlay() override;
+    // Virtual overrides
+    virtual void BeginPlay() override;
+    virtual void Tick(float DeltaTime) override;
 
-	// Configuration
+    // Config
+    /** Asteroid class to spawn. Assign in the BP. */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawner")
+    TSubclassOf<class AAsteroid> AsteroidClass;
 
-	/** Asteroid class to spawn. Assign in the BP. */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawner")
-	TSubclassOf<class AAsteroid> AsteroidClass;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawner")
+    float SpawnInterval = 2.5f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawner")
-	float SpawnInterval = 2.5f;
+    /** Half-size of the spawn box. Asteroids spawn just outside this area. */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawner")
+    float SpawnAreaHalfExtent = 3000.f;
 
-	/** Half-size of the spawn box. Asteroids spawn just outside this area. */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawner")
-	float SpawnAreaHalfExtent = 3000.f;
+    /** Half-size of the playfield. Asteroids beyond this wrap to the opposite side. */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawner")
+    float PlayfieldHalfExtent = 3500.f;
 
-	/** Half-size of the playfield. Asteroids beyond this wrap to the opposite side. */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawner")
-	float PlayfieldHalfExtent = 3500.f;
+    /** Minimum asteroid speed. */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawner")
+    float MinSpeed = 400.f;
 
-	/** Minimum asteroid speed. */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawner")
-	float MinSpeed = 400.f;
-
-	/** Maximum asteroid speed. */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawner")
-	float MaxSpeed = 1200.f;
+    /** Maximum asteroid speed. */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawner")
+    float MaxSpeed = 1200.f;
 
 private:
-	//Runtime state
+    // Internal helpers
+    void SpawnAsteroid();
+    void UpdateWrapAround();
 
-	float TimeSinceLastSpawn = 0.f;
+    // Runtime state
+    UPROPERTY()
+    TArray<TObjectPtr<class AAsteroid>> SpawnedAsteroids;
 
-	UPROPERTY()
-	TArray<TObjectPtr<class AAsteroid>> SpawnedAsteroids;
-
-	// Internal
-
-	void SpawnAsteroid();
-	void UpdateWrapAround();
+    float TimeSinceLastSpawn = 0.f;
 };

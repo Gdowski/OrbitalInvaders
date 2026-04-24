@@ -14,28 +14,34 @@ class ORBITALINVADERS_API ABunkerSpawner : public AActor
 	GENERATED_BODY()
 
 public:
-	ABunkerSpawner();
-	
-	void RespawnBunkers();
+    // Constructor
+    ABunkerSpawner();
+
+    // Public API
+    void RespawnBunkers();
 
 protected:
-	virtual void BeginPlay() override;
+    // Virtual overrides
+    virtual void BeginPlay() override;
 
-	/** Bunker class to spawn. Assigned in BP subclass. */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Bunker")
-	TSubclassOf<class ABunker> BunkerClass;
+    // Config
+    /** Bunker class to spawn. Assigned in BP subclass. */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Bunker")
+    TSubclassOf<class ABunker> BunkerClass;
 
-	/** Number of bunkers to spawn around Earth. */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Bunker", meta = (ClampMin = "1"))
-	int32 BunkerCount = 6;
+    /** Number of bunkers to spawn around Earth. */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Bunker", meta = (ClampMin = "1"))
+    int32 BunkerCount = 6;
 
-	/** Radius at which bunkers are placed (UE units). Should be between player orbit and invader orbit. */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Bunker")
-	float BunkerOrbitRadius = 1100.f;
-	
+    /** Radius at which bunkers are placed (UE units). Should be between player orbit and invader orbit. */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Bunker")
+    float BunkerOrbitRadius = 1100.f;
+
 private:
-	UPROPERTY()
-	TArray<TObjectPtr<class ABunker>> SpawnedBunkers;
-	
-	void SpawnBunkers();
+    // Internal helpers
+    void SpawnBunkers();
+
+    // Runtime state
+    UPROPERTY()
+    TArray<TObjectPtr<class ABunker>> SpawnedBunkers;
 };

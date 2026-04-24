@@ -27,21 +27,25 @@ class ORBITALINVADERS_API AOrbitalGameMode : public AGameModeBase
 	GENERATED_BODY()
 	
 public:
-	AOrbitalGameMode();
-	
-	UFUNCTION(BlueprintCallable, Category = "Gameplay")
-	void TriggerGameOver(const FString& Reason);
-	/** Event when game is over */
-	UPROPERTY(BlueprintAssignable, Category = "Gameplay")
-	FOnGameLost OnGameLost;
-	
+    // Constructor
+    AOrbitalGameMode();
+
+    // Public API
+    UFUNCTION(BlueprintCallable, Category = "Gameplay")
+    void TriggerGameOver(const FString& Reason);
+
+    // Delegates
+    UPROPERTY(BlueprintAssignable, Category = "Gameplay")
+    FOnGameLost OnGameLost;
+
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-	TObjectPtr<class USoundBase> BackgroundMusic;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-	TObjectPtr<class USoundBase> GameOverSound;
-	
-protected:
-	virtual void BeginPlay() override;
+    // Virtual overrides
+    virtual void BeginPlay() override;
+
+    // SFX / VFX
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+    TObjectPtr<class USoundBase> BackgroundMusic;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+    TObjectPtr<class USoundBase> GameOverSound;
 };

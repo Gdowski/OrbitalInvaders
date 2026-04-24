@@ -25,51 +25,59 @@ class ORBITALINVADERS_API AAsteroid : public AActor
 	GENERATED_BODY()
 
 public:
-	AAsteroid();
-	
-	UFUNCTION(BlueprintCallable, Category = "Asteroid")
-	void Init(const FVector& InVelocity, EAsteroidSize InSize);
+    // Constructor
+    AAsteroid();
 
-	UFUNCTION(BlueprintCallable, Category = "Asteroid")
-	void SplitOrDestroy();
+    // Public API
+    UFUNCTION(BlueprintCallable, Category = "Asteroid")
+    void Init(const FVector& InVelocity, EAsteroidSize InSize);
+
+    UFUNCTION(BlueprintCallable, Category = "Asteroid")
+    void SplitOrDestroy();
 
 protected:
-	virtual void BeginPlay() override;
+    // Virtual overrides
+    virtual void BeginPlay() override;
 
-	// Components
+    // Components
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+    TObjectPtr<class USphereComponent> CollisionComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class USphereComponent> CollisionComponent;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+    TObjectPtr<class UStaticMeshComponent> AsteroidMesh;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UStaticMeshComponent> AsteroidMesh;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UProjectileMovementComponent> MovementComponent;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+    TObjectPtr<class UProjectileMovementComponent> MovementComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SFX")
-	TObjectPtr<class USoundBase> ExplosionSound;
-	// Data 
+    // SFX / VFX
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SFX")
+    TObjectPtr<class USoundBase> ExplosionSound;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Asteroid")
-	FVector Velocity = FVector::ZeroVector;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "VFX")
+    TObjectPtr<class UNiagaraSystem> ExplosionEffect;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Asteroid")
-	EAsteroidSize Size = EAsteroidSize::Large;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "VFX")
-	TObjectPtr<class UNiagaraSystem> ExplosionEffect;
+    // Runtime state
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Asteroid")
+    FVector Velocity = FVector::ZeroVector;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Asteroid")
+    EAsteroidSize Size = EAsteroidSize::Large;
+
 private:
-	UFUNCTION()
-	void HandleOverlap(
-		UPrimitiveComponent* OverlappedComponent,
-		AActor* OtherActor,
-		UPrimitiveComponent* OtherComp,
-		int32 OtherBodyIndex,
-		bool bFromSweep,
-		const FHitResult& SweepResult);
-	
-	bool bIsBeingDestroyed = false;
-	
-	EScoreEvent GetScoreEventForSize() const;
+    // Overlap callbacks
+    UFUNCTION()
+    void HandleOverlap(
+        UPrimitiveComponent* OverlappedComponent,
+        AActor* OtherActor,
+        UPrimitiveComponent* OtherComp,
+        int32 OtherBodyIndex,
+        bool bFromSweep,
+        const FHitResult& SweepResult);
+
+    // Internal helpers
+    EScoreEvent GetScoreEventForSize() const;
+
+    // Runtime state
+    bool bIsBeingDestroyed = false;
 
 };
