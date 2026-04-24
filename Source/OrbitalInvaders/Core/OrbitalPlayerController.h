@@ -25,7 +25,7 @@ public:
 	/** Trigger camera shake with given intensity (0.0 - 1.0). */
 	UFUNCTION(BlueprintCallable, Category = "Effects")
 	void PlayCameraShake(float Intensity = 1.f);
-    UOrbitalHUD* GetHUD() const { return HUDWidget; }
+    UOrbitalHUD* GetOrbitalHUD() const { return HUDWidget; }
 
 protected:
 	/** Camera shake class used for gameplay impacts. Assigned in BP. */

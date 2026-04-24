@@ -28,7 +28,7 @@ void AOrbitalGameState::AddScore(int32 Delta)
 		{
 			if (AOrbitalPlayerController* OPC = Cast<AOrbitalPlayerController>(PC))
 			{
-				OPC->GetHUD()->UpdateScore(Score);
+				OPC->GetOrbitalHUD()->UpdateScore(Score);
 			}
 		}
 	}

@@ -49,7 +49,7 @@ void AOrbitalGameMode::TriggerGameOver(const FString& Reason)
 
 	if (APlayerController* PC = World->GetFirstPlayerController())
 	{
-		bool bResult = PC->SetPause(true);
+		PC->SetPause(true);
 	}
 	
 	//here need to add the event dispatch	

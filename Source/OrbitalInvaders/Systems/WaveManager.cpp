@@ -54,7 +54,7 @@ void AWaveManager::StartNextWave()
         {
             if (AOrbitalPlayerController* OPC = Cast<AOrbitalPlayerController>(PC))
             {
-                OPC->GetHUD()->UpdateWave(CurrentWave);
+                OPC->GetOrbitalHUD()->UpdateWave(CurrentWave);
             }
         }
     }

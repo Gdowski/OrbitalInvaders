@@ -9,7 +9,7 @@ ABunker::ABunker()
 {
     PrimaryActorTick.bCanEverTick = false;
 
-    CollisionComponent = CollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionComponent"));
+    CollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionComponent"));
     CollisionComponent->SetCollisionProfileName(TEXT("Bunker"));
     RootComponent = CollisionComponent;
 

@@ -23,8 +23,7 @@ APlayerShip::APlayerShip()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
-	CurrentHealth = MaxHealth;
+
 	CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionComponent"));
 	CollisionComponent->InitSphereRadius(50.f);
 	CollisionComponent->SetCollisionProfileName(TEXT("Player"));
@@ -54,6 +53,7 @@ APlayerShip::APlayerShip()
 void APlayerShip::BeginPlay()
 {
 	Super::BeginPlay();
+	CurrentHealth = MaxHealth;
 	CurrentAngle = PI / 2.f;
 	//initialize the position of the player
 	UpdateOrbitalPosition();
@@ -180,7 +180,7 @@ int32 APlayerShip::ApplyDamage(int32 Amount)
 	if (AOrbitalPlayerController* PC = Cast<AOrbitalPlayerController>(GetController()))
 	{
 		PC->PlayCameraShake(1.f);  // full intensity for player hit
-		PC->GetHUD()->UpdatePlayerHealth(CurrentHealth);
+		PC->GetOrbitalHUD()->UpdatePlayerHealth(CurrentHealth);
 	}
 	
 	if (CurrentHealth <= 0)
@@ -225,6 +225,7 @@ void APlayerShip::HandleOverlap(
 	const FHitResult& SweepResult)
 {
 	if (!OtherActor || OtherActor == this) return;
+	if (bIsInvincible) return;
 
 	// Hit by projectile
 	if (AProjectile* Projectile = Cast<AProjectile>(OtherActor))
@@ -275,8 +276,14 @@ void APlayerShip::TogglePause()
 		else
 		{
 			PC->SetPause(true);
-			PauseWidget = CreateWidget<UUserWidget>(PC, PauseWidgetClass);
-			PauseWidget->AddToViewport(1);
+			if (PauseWidgetClass)
+			{
+				PauseWidget = CreateWidget<UUserWidget>(PC, PauseWidgetClass);
+				if (PauseWidget)
+				{
+					PauseWidget->AddToViewport(1);
+				}
+			}
 		}
 	}
 }

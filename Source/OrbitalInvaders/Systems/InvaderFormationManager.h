@@ -37,10 +37,10 @@ public:
     void SetFireInterval(float NewInterval) { FireInterval = NewInterval; }
     float GetJumpInterval() const { return JumpInterval; }
     void SetJumpInterval(float NewInterval) { JumpInterval = NewInterval; }
-    float GetInvadersPerOrbit() const { return InvadersPerOrbit; }
-    void SetInvadersPerOrbit(float NewInvadersPerOrbit) { InvadersPerOrbit = NewInvadersPerOrbit; }
-    float GetOrbitCount() const { return OrbitCount; }
-    void SetOrbitCount(float NewOrbitCount) { OrbitCount = NewOrbitCount; }
+    int32 GetInvadersPerOrbit() const { return InvadersPerOrbit; }
+    void SetInvadersPerOrbit(int32 NewInvadersPerOrbit) { InvadersPerOrbit = NewInvadersPerOrbit; }
+    int32 GetOrbitCount() const { return OrbitCount; }
+    void SetOrbitCount(int32 NewOrbitCount) { OrbitCount = NewOrbitCount; }
     
     /** Event when all invaders are destroyed. For WaveManager. */
     UPROPERTY(BlueprintAssignable, Category = "Formation")

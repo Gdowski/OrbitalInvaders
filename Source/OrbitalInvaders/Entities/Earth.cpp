@@ -50,7 +50,7 @@ int32 AEarth::ApplyDamage(int32 Amount)
 			if (AOrbitalPlayerController* OPC = Cast<AOrbitalPlayerController>(PC))
 			{
 				OPC->PlayCameraShake(0.1f);
-				OPC->GetHUD()->UpdateEarthHealth(CurrentHealth);
+				OPC->GetOrbitalHUD()->UpdateEarthHealth(CurrentHealth);
 			}
 		}
 	}

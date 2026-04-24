@@ -9,7 +9,7 @@ Built with **Unreal Engine 5.7** in **C++** and **Blueprints** as a recruitment 
 ## Gameplay
 
 - The player pilots a ship orbiting Earth in a full 360° circle.
-- Waves of **invaders** approach along 6 concentric orbits, jumping closer each cycle — if any invader breaches the player's orbit, the game is over.
+- Waves of **invaders** approach along concentric orbits, jumping closer each cycle — if any invader breaches the player's orbit, the game is over.
 - The player fires projectiles radially outwards toward enemies; invaders fire inwards the same way.
 - **Asteroids** cross the playfield with wrap-around, splitting into smaller pieces when shot.
 - A rare **Special Invader** spirals in from the outer rim toward Earth.
@@ -28,10 +28,9 @@ The ship moves along its orbit based on the direction the player pushes toward. 
 
 | Input | Action |
 |-------|--------|
-| `W` / `A` / `S` / `D` | Move along orbit (directional) |
-| `↑` / `←` / `↓` / `→` | Move along orbit (directional) |
-| **Left Thumbstick** (gamepad) | Move along orbit |
-| `Space` / `Left Mouse Button` / `A` button (gamepad) | Fire |
+| `A` / `D` | Move along orbit (directional) |
+| `←` / `→` | Move along orbit (directional) |
+| `Space`   | Fire |
 | `Esc` | Pause |
 
 
